@@ -148,7 +148,7 @@
                 <p>Al firmar este documento, el/la contratista declara que ha leído y aceptado todos los términos y condiciones aquí presentados.</p>
             </div>
 
-            <form id="signature-form" action="{{ route('contract.sign.post', $person->per_id) }}" method="POST">
+            <form id="signature-form" action="{{ route('contract.sign.post', $person->signature_token) }}" method="POST">
                 @csrf
                 <div class="signature-area">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">

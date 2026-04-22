@@ -11,18 +11,18 @@ class ContractController extends Controller
     /**
      * Show the public signing form.
      */
-    public function show($id)
+    public function show($token)
     {
-        $person = Personal::findOrFail($id);
+        $person = Personal::where('signature_token', $token)->firstOrFail();
         return view('contract.sign', compact('person'));
     }
 
     /**
      * Store the signature and generate the PDF.
      */
-    public function sign(Request $request, $id)
+    public function sign(Request $request, $token)
     {
-        $person = Personal::findOrFail($id);
+        $person = Personal::where('signature_token', $token)->firstOrFail();
 
         $request->validate([
             'signature' => 'required', // This will be the base64 string

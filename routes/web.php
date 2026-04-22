@@ -26,8 +26,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Public Contract Routes
-Route::get('/contract/sign/{id}', [ContractController::class, 'show'])->name('contract.show');
-Route::post('/contract/sign/{id}', [ContractController::class, 'sign'])->name('contract.sign.post');
+Route::get('/contract/sign/{token}', [ContractController::class, 'show'])->name('contract.show');
+Route::post('/contract/sign/{token}', [ContractController::class, 'sign'])->name('contract.sign.post');
 
 Route::middleware(['simple_auth'])->group(function () {
 

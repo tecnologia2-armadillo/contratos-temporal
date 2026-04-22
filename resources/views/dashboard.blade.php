@@ -276,6 +276,86 @@
             margin-bottom: 0.25rem;
             border: 1px solid rgba(245, 158, 11, 0.2);
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: modalFade 0.3s ease-out;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .qr-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            display: inline-block;
+            margin: 1.5rem 0;
+        }
+
+        .share-link {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .btn-action {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
     </style>
 </head>
 <body>
@@ -328,6 +408,7 @@
                         <th>Ubicación</th>
                         <th>Estado</th>
                         <th>Contrato</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -388,6 +469,15 @@
                                     <a href="{{ $p->contrato_src }}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>
                                 @endif
                             </td>
+                            <td>
+                                @if(!$p->contrato_firmado)
+                                    <button class="btn-action" onclick="showShareModal('{{ $p->nombre_completo }}', '{{ route('contract.show', $p->signature_token) }}')">
+                                        🔗 Compartir
+                                    </button>
+                                @else
+                                    <span style="color: var(--text-muted); font-size: 0.7rem;">Finalizado</span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -395,9 +485,27 @@
         </div>
     </main>
 
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" style="margin-bottom: 0.5rem;">Cargar Contrato</h3>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Escanea el QR o copia el enlace para compartir con el trabajador.</p>
+            
+            <div class="qr-container" id="qrcode"></div>
+            
+            <div class="share-link">
+                <input type="text" id="share-url" readonly style="background:transparent; border:none; color:white; width:100%; outline:none; font-size: 0.75rem;">
+                <button class="copy-btn" id="copy-btn" onclick="copyUrl()">Copiar</button>
+            </div>
+            
+            <button class="btn-outline" onclick="closeModal()" style="margin-top: 1.5rem; width: 100%; border-radius: 0.5rem; padding: 0.75rem;">Cerrar</button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <script>
         $(document).ready(function() {
@@ -438,6 +546,56 @@
                 table.draw();
             });
         });
+
+        // QR and Modal Logic
+        let qrcode = null;
+
+        function showShareModal(name, url) {
+            document.getElementById('modal-title').innerText = "Firma de " + name;
+            document.getElementById('share-url').value = url;
+            
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = ""; // Clear previous QR
+            
+            qrcode = new QRCode(qrContainer, {
+                text: url,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyUrl() {
+            const copyText = document.getElementById("share-url");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = "¡Copiado!";
+            btn.style.backgroundColor = "#10b981";
+            
+            setTimeout(() => {
+                btn.innerText = "Copiar";
+                btn.style.backgroundColor = "";
+            }, 2000);
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>

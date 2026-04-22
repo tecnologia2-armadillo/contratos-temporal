@@ -47,7 +47,28 @@ class Personal extends Model
         'per_detalle_status',
         'contrato_firmado',
         'contrato_src',
+        'signature_token',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::creating(function ($person) {
+            if (empty($person->signature_token)) {
+                $person->signature_token = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+
+    /**
+     * Get the signature token.
+     */
+    public function getSignatureTokenAttribute($value)
+    {
+        return $value ?? (string) \Illuminate\Support\Str::uuid();
+    }
 
     /**
      * Get the personal's full name.
