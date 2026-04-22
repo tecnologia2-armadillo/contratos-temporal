@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Personal extends Model
 {
@@ -51,23 +52,35 @@ class Personal extends Model
     ];
 
     /**
+     * The attributes that should be appended to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['nombre_completo'];
+
+    /**
      * The "booted" method of the model.
      */
     protected static function booted()
     {
         static::creating(function ($person) {
             if (empty($person->signature_token)) {
-                $person->signature_token = (string) \Illuminate\Support\Str::uuid();
+                $person->signature_token = (string) Str::uuid();
             }
         });
     }
 
     /**
-     * Get the signature token.
+     * Get or create a signature token for the person.
      */
     public function getSignatureTokenAttribute($value)
     {
-        return $value ?? (string) \Illuminate\Support\Str::uuid();
+        if (empty($value)) {
+            $newToken = (string) Str::uuid();
+            $this->update(['signature_token' => $newToken]);
+            return $newToken;
+        }
+        return $value;
     }
 
     /**

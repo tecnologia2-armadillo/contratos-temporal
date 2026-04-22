@@ -412,74 +412,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($personal as $p)
-                        <tr>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="avatar">
-                                        @if($p->per_foto)
-                                            <img src="{{ $p->per_foto }}" alt="{{ $p->nombre_completo }}">
-                                        @else
-                                            <div class="avatar-placeholder">{{ substr($p->per_primer_nombre, 0, 1) }}{{ substr($p->per_primer_apellido, 0, 1) }}</div>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 600;">{{ $p->nombre_completo }}</div>
-                                        <div style="font-size: 0.7rem; color: var(--text-muted);">
-                                            @foreach($p->perfiles as $perfil)
-                                                {{ $perfil->perf_nombre_perfil }}{{ !$loop->last ? ',' : '' }}
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td data-search="{{ $p->per_num_doc }}">
-                                <div style="font-size: 0.85rem;">{{ $p->per_tipo_doc }}</div>
-                                <div style="font-weight: 600;">{{ $p->per_num_doc }}</div>
-                            </td>
-                            <td data-search="{{ $p->per_correo }} {{ $p->per_telefono_whatsapp }}">
-                                <div style="font-size: 0.85rem;">{{ $p->per_correo }}</div>
-                                <div style="color: var(--text-muted);">{{ $p->per_telefono_whatsapp }}</div>
-                            </td>
-                            <td>{{ $p->per_fecha_nacimiento }}</td>
-                            <td>
-                                <div class="bank-info">
-                                    @if($p->datoBancario)
-                                        <span class="bank-name">{{ $p->datoBancario->banco->ban_banco_nombre ?? 'Sin Banco' }}</span>
-                                        <span class="account-number">{{ $p->datoBancario->dba_num_cuenta }}</span>
-                                    @else
-                                        <span style="color: var(--text-muted);">Sin datos</span>
-                                    @endif
-                                </div>
-                            </td>
-                            <td>{{ $p->ciudad->ciu_nombre ?? 'N/A' }}</td>
-                            <td>
-                                <span class="status-badge">
-                                    {{ $p->status->spe_status_personal ?? 'Activo' }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($p->contrato_firmado)
-                                    <span class="status-badge" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Firmado</span>
-                                @else
-                                    <span class="status-badge" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Pendiente</span>
-                                @endif
-
-                                @if($p->contrato_src)
-                                    <a href="{{ $p->contrato_src }}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>
-                                @endif
-                            </td>
-                            <td>
-                                @if(!$p->contrato_firmado)
-                                    <button class="btn-action" onclick="showShareModal('{{ $p->nombre_completo }}', '{{ route('contract.show', $p->signature_token) }}')">
-                                        🔗 Compartir
-                                    </button>
-                                @else
-                                    <span style="color: var(--text-muted); font-size: 0.7rem;">Finalizado</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
+                    {{-- Rows will be drawn by DataTables Server-Side --}}
                 </tbody>
             </table>
         </div>
@@ -509,39 +442,114 @@
     
     <script>
         $(document).ready(function() {
+            const signBaseUrl = "{{ route('contract.show', '') }}";
+
             // DataTables Initialization
             var table = $('#personalTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('dashboard') }}",
+                    "data": function(d) {
+                        d.birth_start = $('#birth-start').val();
+                        d.birth_end = $('#birth-end').val();
+                    }
+                },
+                "columns": [
+                    { 
+                        "data": "nombre_completo",
+                        "render": function(data, type, row) {
+                            let perfiles = row.perfiles.map(p => p.perf_nombre_perfil).join(', ');
+                            let avatar = row.per_foto 
+                                ? `<img src="${row.per_foto}" alt="${data}">` 
+                                : `<div class="avatar-placeholder">${row.per_primer_nombre.charAt(0)}${row.per_primer_apellido.charAt(0)}</div>`;
+                            
+                            return `<div class="user-cell">
+                                        <div class="avatar">${avatar}</div>
+                                        <div>
+                                            <div style="font-weight: 600;">${data}</div>
+                                            <div style="font-size: 0.7rem; color: var(--text-muted);">${perfiles}</div>
+                                        </div>
+                                    </div>`;
+                        }
+                    },
+                    { 
+                        "data": "per_num_doc",
+                        "render": function(data, type, row) {
+                            return `<div style="font-size: 0.85rem;">${row.per_tipo_doc}</div>
+                                    <div style="font-weight: 600;">${data}</div>`;
+                        }
+                    },
+                    { 
+                        "data": "per_correo",
+                        "render": function(data, type, row) {
+                            return `<div style="font-size: 0.85rem;">${data}</div>
+                                    <div style="color: var(--text-muted);">${row.per_telefono_whatsapp}</div>`;
+                        }
+                    },
+                    { "data": "per_fecha_nacimiento" },
+                    { 
+                        "data": "id",
+                        "render": function(data, type, row) {
+                            if (row.dato_bancario) {
+                                return `<div class="bank-info">
+                                            <span class="bank-name">${row.dato_bancario.banco ? row.dato_bancario.banco.ban_banco_nombre : 'Sin Banco'}</span>
+                                            <span class="account-number">${row.dato_bancario.dba_num_cuenta}</span>
+                                        </div>`;
+                            }
+                            return `<span style="color: var(--text-muted);">Sin datos</span>`;
+                        }
+                    },
+                    { 
+                        "data": "ciudad.ciu_nombre",
+                        "defaultContent": "N/A"
+                    },
+                    { 
+                        "data": "status.spe_status_personal",
+                        "defaultContent": "Activo",
+                        "render": function(data) {
+                            return `<span class="status-badge">${data}</span>`;
+                        }
+                    },
+                    { 
+                        "data": "contrato_firmado",
+                        "render": function(data, type, row) {
+                            let badge = data 
+                                ? `<span class="status-badge" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Firmado</span>`
+                                : `<span class="status-badge" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Pendiente</span>`;
+                            
+                            let link = row.contrato_src 
+                                ? `<a href="${row.contrato_src}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>`
+                                : '';
+                            
+                            return badge + link;
+                        }
+                    },
+                    { 
+                        "data": "signature_token",
+                        "render": function(data, type, row) {
+                            if (!row.contrato_firmado) {
+                                return `<button class="btn-action" onclick="showShareModal('${row.nombre_completo}', '${signBaseUrl}/${data}')">
+                                            🔗 Compartir
+                                        </button>`;
+                            }
+                            return `<span style="color: var(--text-muted); font-size: 0.7rem;">Finalizado</span>`;
+                        }
+                    }
+                ],
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
                 },
-                "dom": 'lrtip', // Hide default search bar to use our custom one
+                "dom": 'lrtip',
                 "pageLength": 10,
-                "responsive": true,
-                "order": [[0, "asc"]]
+                "responsive": true
             });
 
-            // Custom Global Search
+            // Re-draw table on custom filter change
             $('#global-search').on('keyup', function() {
                 table.search(this.value).draw();
             });
 
-            // Date Range Filtering Logic
-            $.fn.dataTable.ext.search.push(
-                function(settings, data, dataIndex) {
-                    var min = $('#birth-start').val();
-                    var max = $('#birth-end').val();
-                    var birthDate = data[3]; // Use the index of the Birth Date column
-
-                    if (min === "" && max === "") return true;
-                    if (min === "" && birthDate <= max) return true;
-                    if (max === "" && birthDate >= min) return true;
-                    if (birthDate >= min && birthDate <= max) return true;
-                    
-                    return false;
-                }
-            );
-
-            // Re-draw table on date change
             $('#birth-start, #birth-end').on('change', function() {
                 table.draw();
             });

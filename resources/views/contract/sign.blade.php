@@ -120,12 +120,64 @@
             color: var(--text-muted);
             font-size: 0.875rem;
         }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(245, 158, 11, 0.2);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-alert {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1>Contrato de Prestación de Servicios</h1>
+            
+            @if(session('error'))
+                <div class="error-alert">
+                    <span>⚠️</span>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
+
             <p style="margin-bottom: 1rem; color: var(--text-muted);">Hola, <strong>{{ $person->nombre_completo }}</strong>. Por favor revisa el siguiente contrato y firma al final.</p>
             
             <div class="contract-text">
@@ -182,6 +234,12 @@
         <div class="footer">
             © 2026 Armadillo - Sistema de Contratación Segura
         </div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Guardando Contrato...</h2>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">Cargando documento en Google Drive.</p>
     </div>
 
     <!-- Signature Pad Library -->
@@ -263,6 +321,11 @@
                     document.getElementById('signature-input').value = uploadedFileBase64;
                 }
             }
+
+            // Show loading and disable button
+            document.getElementById('loading-overlay').style.display = 'flex';
+            document.getElementById('save').disabled = true;
+            document.getElementById('save').innerText = 'Procesando...';
         });
     </script>
 </body>
