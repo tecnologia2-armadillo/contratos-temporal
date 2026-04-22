@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContractController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -24,7 +25,12 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Public Contract Routes
+Route::get('/contract/sign/{id}', [ContractController::class, 'show'])->name('contract.show');
+Route::post('/contract/sign/{id}', [ContractController::class, 'sign'])->name('contract.sign.post');
+
 Route::middleware(['simple_auth'])->group(function () {
+
     Route::get('/dashboard', [PersonalController::class, 'index'])->name('dashboard');
 });
 
