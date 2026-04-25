@@ -1,5 +1,6 @@
 # Etapa 1: Compilar assets frontend (Laravel Mix)
-FROM node:18-alpine AS build-node
+# Bajamos a Node 16 para compatibilidad con versiones antiguas de Laravel Mix/Webpack
+FROM node:16-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
@@ -51,7 +52,7 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN sed -i -e 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
     && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
 
-# Exponer el puerto 80
+# Exponer el puerto 80 (Apache por defecto escucha aquí)
 EXPOSE 80
 
 # Iniciar Apache
