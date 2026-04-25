@@ -2,14 +2,10 @@
 FROM node:18-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
-# Quitamos el package-lock para forzar lecturas limpias
+# Quitamos el package-lock para forzar lecturas limpias e instalar la versión de webpack-cli^4 que añadimos en package.json
 RUN rm -f package-lock.json && npm install
 COPY . .
-# Variables maestras inquebrantables para aniquilar el ProgressPlugin
-ENV CI=true
-ENV DISABLE_NOTIFICATIONS=true
-ENV NO_PROGRESS_PLUGIN=true
-RUN npx mix --production --no-progress
+RUN npm run prod
 # Etapa 2: Configurar entorno PHP y servidor web
 FROM php:8.2-apache
 
