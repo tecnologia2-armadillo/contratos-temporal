@@ -5,7 +5,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
 COPY . .
-RUN npm run prod
+# En Docker, la barra de progreso de Webpack 5 + Mix genera errores de compatibilidad. Lo apagamos con --no-progress
+RUN npx mix --production --no-progress
 
 # Etapa 2: Configurar entorno PHP y servidor web
 FROM php:8.2-apache
@@ -48,9 +49,11 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cambiar la raíz del servidor Apache a la carpeta 'public' de Laravel
+# Cambiar la raíz del servidor Apache a la carpeta 'public' de Laravel y configurar puerto 8000
 RUN sed -i -e 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
+    && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf \
+    && sed -i -e 's/Listen 80/Listen 8000/g' /etc/apache2/ports.conf \
+    && sed -i -e 's/*:80/*:8000/g' /etc/apache2/sites-available/000-default.conf
 
 # Exponer el puerto 8000
 EXPOSE 8000
