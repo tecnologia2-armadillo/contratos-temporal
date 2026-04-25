@@ -77,23 +77,23 @@
     </div>
 
     <div class="section">
-        <h3>CLÁUSULA PRIMERA: OBJETO DEL CONTRATO</h3>
-        <p>El presente contrato tiene como objeto la prestación de servicios temporales por parte de el/la contratista para ARMADILLO, bajo las condiciones de tiempo, modo y lugar estipuladas en la orden de servicio correspondiente.</p>
-    </div>
+        <p style="text-align: justify; margin-bottom: 15px;">Por medio del presente acuerdo, la persona que suscribe, en adelante EL CONTRATISTA, declara bajo la gravedad de juramento que actuará como proveedor independiente de servicios de apoyo logístico para eventos de cualquier naturaleza organizados por OPERADORES ARMADILLO S.A.S., NIT 901.346.590-8, con domicilio en Bogotá D.C., en adelante EL CONTRATANTE, desempeñando funciones como control de accesos, lectura de boletería, manejo de tránsito, apoyo en alimentación u otras tareas logísticas definidas para cada evento, las cuales ejecutará de manera autónoma, bajo su cuenta y riesgo, con sus conocimientos, habilidades y buena disposición, sin que exista vínculo laboral ni relación de subordinación; las indicaciones de coordinadores o directores corresponden únicamente a lineamientos operativos para la adecuada prestación del servicio contratado. EL CONTRATANTE facilitará prendas logísticas, herramientas y materiales necesarios para la buena prestación de los servicios, los cuales se entregan a título de préstamo, no constituyen dotación laboral y deberán ser devueltos al finalizar la labor. EL CONTRATISTA manifiesta que su participación no implica exclusividad ni continuidad y que podrá prestar servicios a otras personas naturales o jurídicas sin restricción alguna, siendo convocado únicamente cuando EL CONTRATANTE requiera sus servicios, pudiendo aceptarlos o rechazarlos libremente.</p>
+        
+        <p style="text-align: justify; margin-bottom: 15px;">Declara asimismo que conoce y acepta que la prestación del servicio se realizará en la franja horaria requerida para el evento, conforme a las necesidades operativas informadas previamente y aceptadas por el proveedor independiente al confirmar su disponibilidad, sin que ello implique dirección o subordinación laboral, asumiendo los riesgos inherentes a su actividad y la plena responsabilidad por la calidad y cuidado en el desarrollo de sus actividades, comprometiéndose a cumplir las normas de seguridad, convivencia y protocolos exigidos en cada sitio de trabajo, ética y buena conducta en sus relaciones con EL CONTRATANTE, otros contratistas, clientes y terceros, así como a asistir a las inducciones informativas o de orientación general que se realicen, sin que estas constituyan subordinación.</p>
 
-    <div class="section">
-        <h3>CLÁUSULA SEGUNDA: DURACIÓN</h3>
-        <p>La vigencia del presente contrato será determinada por la duración de la operación asignada, iniciando en la fecha de aceptación del presente documento.</p>
-    </div>
+        <p style="text-align: justify; margin-bottom: 15px;">Manifiesta que prestará sus servicios como persona natural independiente, declara conocer y cumplir con las normas vigentes en materia de seguridad social como independiente, y que no tendrá derecho a prestaciones sociales, indemnizaciones, recargos o beneficios laborales de ninguna naturaleza en su calidad de independencia, considerando que los pagos recibidos corresponden únicamente a honorarios por servicios prestados y no constituyen pagos salariales en ningún caso. Cualquier pago de honorarios como apoyo logístico adicional se otorga de manera voluntaria por EL CONTRATANTE y no constituye salario ni genera derechos laborales. El pago se realizará conforme a los valores previamente informados y aceptados, constituyendo honorarios como proveedor independiente e incluyendo todos sus costos, gastos y obligaciones fiscales o parafiscales.</p>
 
-    <div class="section">
-        <h3>CLÁUSULA TERCERA: COMPROMISO DE CONFIDENCIALIDAD</h3>
-        <p>El/la contratista se compromete a mantener absoluta reserva sobre toda la información corporativa, procesos, bases de datos y estrategias de ARMADILLO a las que tenga acceso durante el ejercicio de sus funciones. El incumplimiento de esta cláusula dará lugar a las acciones legales correspondientes.</p>
-    </div>
+        <p style="text-align: justify; margin-bottom: 15px;">Declara que responderá frente a cualquier situación que se derive exclusivamente de su actuación profesional durante la ejecución de sus servicios, manteniendo indemne a EL CONTRATANTE frente a situaciones imputables a su actuación directa. EL CONTRATANTE podrá dar por terminado este acuerdo de manera anticipada y unilateral en caso de incumplimiento de las obligaciones aquí pactadas, de la prestación defectuosa de sus servicios o del incumplimiento en su asistencia conforme a la programación establecida. EL CONTRATISTA se obliga a guardar confidencialidad sobre toda información relativa al CONTRATANTE, sus clientes, pagos y eventos durante el término de ejecución del acuerdo y hasta seis (6) meses posteriores a su terminación.</p>
 
-    <div class="section">
-        <h3>CLÁUSULA CUARTA: PAGOS Y HONORARIOS</h3>
-        <p>Los pagos se realizarán de acuerdo a la tabla de honorarios vigente para el perfil del contratista, previa presentación de los requisitos de ley y reporte de horas laboradas por parte del supervisor de la operación.</p>
+        <p style="text-align: justify; margin-bottom: 15px;">EL CONTRATISTA autoriza el tratamiento de sus datos personales por parte de EL CONTRATANTE para fines administrativos, operativos y de contratación, conforme a la política de protección de datos del CONTRATANTE, la cual declara conocer, y para ejercer sus derechos podrá comunicarse al correo descrito en este documento. EL CONTRATANTE declara que este acuerdo constituye prueba suficiente de su carácter no subordinado para cualquier proceso administrativo, civil, laboral o judicial, y tendrá efectos como acuerdo marco para futuras participaciones en eventos logísticos organizados por EL CONTRATANTE, sin necesidad de nueva suscripción, salvo que las partes convengan otra cosa por escrito, declarando haber leído y comprendido su integridad y comprometiéndose a prestar sus servicios en los términos aquí establecidos. Este acuerdo tendrá una vigencia inicial de dos (2) años, prorrogable automáticamente por iguales periodos, salvo aviso en contrario por cualquiera de las partes.</p>
+
+        <p style="text-align: justify; margin-bottom: 15px; font-weight: bold;">Declaro que he leído, comprendido y acepto los términos y condiciones establecidos en este acuerdo, comprometiéndome a prestar mis servicios conforme a lo aquí dispuesto.</p>
+
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9em; color: #555;">
+            <strong>OPERADORES ARMADILLO SAS NIT. 901346590-8</strong><br>
+            Cra. 62 No 97-78, Bogotá, Colombia<br>
+            atencion@operadoresarmadillo.com
+        </p>
     </div>
 
     <div class="signature-section">
