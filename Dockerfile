@@ -52,8 +52,8 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN sed -i -e 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
     && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
 
-# Exponer el puerto 80 (Apache por defecto escucha aquí)
-EXPOSE 80
+# Exponer el puerto 8000
+EXPOSE 8000
 
 # Iniciar Apache
 CMD ["apache2-foreground"]
