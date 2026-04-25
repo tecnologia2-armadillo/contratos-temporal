@@ -2,9 +2,14 @@
 FROM node:18-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install
+# Quitamos el package-lock para forzar lecturas limpias
+RUN rm -f package-lock.json && npm install
 COPY . .
-RUN npm run prod
+# Variables maestras inquebrantables para aniquilar el ProgressPlugin
+ENV CI=true
+ENV DISABLE_NOTIFICATIONS=true
+ENV NO_PROGRESS_PLUGIN=true
+RUN npx mix --production --no-progress
 # Etapa 2: Configurar entorno PHP y servidor web
 FROM php:8.2-apache
 
