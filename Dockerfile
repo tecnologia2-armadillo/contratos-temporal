@@ -1,5 +1,5 @@
 # Etapa 1: Compilar assets frontend (Laravel Mix)
-FROM node:18-alpine AS build-node
+FROM node:14-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
 # Quitamos el package-lock para forzar lecturas limpias e instalar la versión de webpack-cli^4 que añadimos en package.json
