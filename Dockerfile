@@ -1,12 +1,4 @@
-# Etapa 1: Compilar assets frontend (Laravel Mix)
-FROM node:14-alpine AS build-node
-WORKDIR /app
-COPY package.json package-lock.json* ./
-# Quitamos el package-lock para forzar lecturas limpias e instalar la versión de webpack-cli^4 que añadimos en package.json
-RUN rm -f package-lock.json && npm install
-COPY . .
-RUN npm run prod
-# Etapa 2: Configurar entorno PHP y servidor web
+# Configurar entorno PHP y servidor web para Laravel
 FROM php:8.2-apache
 
 # Habilitar mod_rewrite de Apache para Laravel
@@ -34,11 +26,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar el código base de la aplicación
+# Copiar el código base de la aplicación (El CSS/JS es nativo con CDN, no necesitamos Node)
 COPY . .
-
-# Copiar los assets compilados de la Etapa 1 sobrescribiendo la carpeta public
-COPY --from=build-node /app/public ./public
 
 # Instalar las dependencias de Composer (optimizado para producción)
 RUN composer install --optimize-autoloader --no-dev
