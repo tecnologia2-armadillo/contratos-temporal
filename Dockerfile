@@ -36,11 +36,9 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cambiar la raíz del servidor Apache a la carpeta 'public' de Laravel y configurar puerto 8000
+# Cambiar la raíz del servidor Apache a la carpeta 'public' de Laravel
 RUN sed -i -e 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf \
-    && sed -i -e 's/Listen 80/Listen 8000/g' /etc/apache2/ports.conf \
-    && sed -i -e 's/*:80/*:8000/g' /etc/apache2/sites-available/000-default.conf
+    && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
 
 # Exponer el puerto 80
 EXPOSE 80
