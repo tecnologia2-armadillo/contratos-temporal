@@ -1,14 +1,9 @@
 # Etapa 1: Compilar assets frontend (Laravel Mix)
-# Bajamos a Node 16 para compatibilidad con versiones antiguas de Laravel Mix/Webpack
-FROM node:16-alpine AS build-node
+FROM node:18-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
-# Forzamos webpack-cli versión 4 para que sea compatible con laravel-mix 6 y apagamos las notificaciones/barras de progreso
-RUN npm install webpack-cli@4 --save-dev
 COPY . .
-ENV CI=true
-ENV DISABLE_NOTIFICATIONS=true
 RUN npm run prod
 # Etapa 2: Configurar entorno PHP y servidor web
 FROM php:8.2-apache
