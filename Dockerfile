@@ -4,10 +4,12 @@ FROM node:16-alpine AS build-node
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
+# Forzamos webpack-cli versión 4 para que sea compatible con laravel-mix 6 y apagamos las notificaciones/barras de progreso
+RUN npm install webpack-cli@4 --save-dev
 COPY . .
-# En Docker, la barra de progreso de Webpack 5 + Mix genera errores de compatibilidad. Lo apagamos con --no-progress
-RUN npx mix --production --no-progress
-
+ENV CI=true
+ENV DISABLE_NOTIFICATIONS=true
+RUN npm run prod
 # Etapa 2: Configurar entorno PHP y servidor web
 FROM php:8.2-apache
 
