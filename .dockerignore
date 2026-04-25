@@ -1,0 +1,16 @@
+.git
+.env
+/node_modules
+/vendor
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+npm-debug.log
+yarn-error.log
+docker-compose.yml
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+.env.testing
