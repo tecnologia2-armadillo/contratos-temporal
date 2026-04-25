@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\PersonalNoVinculadoController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -29,9 +30,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/contract/sign/{token}', [ContractController::class, 'show'])->name('contract.show');
 Route::post('/contract/sign/{token}', [ContractController::class, 'sign'])->name('contract.sign.post');
 
+Route::get('/contrato/no-vinculado', [PersonalNoVinculadoController::class, 'showSignForm'])->name('contract.no_vinculado.show');
+Route::post('/contrato/no-vinculado', [PersonalNoVinculadoController::class, 'sign'])->name('contract.no_vinculado.post');
+
 Route::middleware(['simple_auth'])->group(function () {
 
     Route::get('/dashboard', [PersonalController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/no-vinculado', [PersonalNoVinculadoController::class, 'index'])->name('dashboard.no_vinculado');
 });
 
 

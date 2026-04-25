@@ -146,6 +146,53 @@
             overflow-x: auto;
         }
 
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -378,6 +425,15 @@
                 <h2>Personal de Armadillo</h2>
                 <p style="color: var(--text-muted); font-size: 0.875rem;">Gestión centralizada con filtros avanzados.</p>
             </div>
+            <div>
+                <button class="btn-action" onclick="copyGeneralLink()">🔗 Copiar Link No Vinculado</button>
+                <input type="text" id="general-link" value="{{ route('contract.no_vinculado.show') }}" style="display:none; position:absolute;">
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('vinculado')">Personal Vinculado</button>
+            <button class="tab-btn" onclick="switchTab('no_vinculado')">Personal No Vinculado</button>
         </div>
 
         <!-- Advanced Filters -->
@@ -396,25 +452,47 @@
             </div>
         </section>
 
-        <div class="table-container">
-            <table id="personalTable" class="display responsive nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Nombre / Cargo</th>
-                        <th>Identificación</th>
-                        <th>Contacto</th>
-                        <th>Nacimiento</th>
-                        <th>Información Bancaria</th>
-                        <th>Ubicación</th>
-                        <th>Estado</th>
-                        <th>Contrato</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- Rows will be drawn by DataTables Server-Side --}}
-                </tbody>
-            </table>
+        <div id="vinculado" class="tab-pane active">
+            <div class="table-container">
+                <table id="personalTable" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre / Cargo</th>
+                            <th>Identificación</th>
+                            <th>Contacto</th>
+                            <th>Nacimiento</th>
+                            <th>Información Bancaria</th>
+                            <th>Ubicación</th>
+                            <th>Estado</th>
+                            <th>Contrato</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- Rows will be drawn by DataTables Server-Side --}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="no_vinculado" class="tab-pane">
+            <div class="table-container">
+                <table id="personalNoVinculadoTable" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Identificación</th>
+                            <th>Contacto</th>
+                            <th>Nacimiento</th>
+                            <th>Información Bancaria</th>
+                            <th>Contrato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- Rows will be drawn by DataTables Server-Side --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
@@ -548,10 +626,78 @@
             // Re-draw table on custom filter change
             $('#global-search').on('keyup', function() {
                 table.search(this.value).draw();
+                tableNoVinculado.search(this.value).draw();
             });
 
             $('#birth-start, #birth-end').on('change', function() {
                 table.draw();
+                tableNoVinculado.draw();
+            });
+
+            // Personal No Vinculado DataTables
+            var tableNoVinculado = $('#personalNoVinculadoTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('dashboard.no_vinculado') }}",
+                    "data": function(d) {
+                        d.birth_start = $('#birth-start').val();
+                        d.birth_end = $('#birth-end').val();
+                    }
+                },
+                "columns": [
+                    { 
+                        "data": "nombre",
+                        "render": function(data, type, row) {
+                            return `<div class="user-cell">
+                                        <div class="avatar"><div class="avatar-placeholder">${row.nombre.charAt(0)}${row.apellido.charAt(0)}</div></div>
+                                        <div>
+                                            <div style="font-weight: 600;">${row.nombre} ${row.apellido}</div>
+                                        </div>
+                                    </div>`;
+                        }
+                    },
+                    { 
+                        "data": "identificacion",
+                        "render": function(data, type, row) {
+                            return `<div style="font-size: 0.85rem;">${row.tipo_identificacion}</div>
+                                    <div style="font-weight: 600;">${data}</div>`;
+                        }
+                    },
+                    { 
+                        "data": "correo",
+                        "render": function(data, type, row) {
+                            return `<div style="font-size: 0.85rem;">${data}</div>
+                                    <div style="color: var(--text-muted);">${row.telefono}</div>`;
+                        }
+                    },
+                    { "data": "fecha_nacimiento" },
+                    { 
+                        "data": "numero_cuenta",
+                        "render": function(data, type, row) {
+                            return `<div class="bank-info">
+                                        <span class="bank-name">${row.banco} (${row.tipo_cuenta})</span>
+                                        <span class="account-number">${data}</span>
+                                    </div>`;
+                        }
+                    },
+                    { 
+                        "data": "contrato_src",
+                        "render": function(data, type, row) {
+                            if (data) {
+                                return `<span class="status-badge" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Firmado</span>
+                                        <a href="${data}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>`;
+                            }
+                            return `<span class="status-badge" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Sin Contrato</span>`;
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                },
+                "dom": 'lrtip',
+                "pageLength": 10,
+                "responsive": true
             });
         });
 
@@ -603,6 +749,26 @@
             if (event.target == modal) {
                 closeModal();
             }
+        }
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            $('.tab-btn').removeClass('active');
+            $('.tab-pane').removeClass('active');
+            
+            $(`button[onclick="switchTab('${tabId}')"]`).addClass('active');
+            $(`#${tabId}`).addClass('active');
+        }
+
+        // Copy General Link
+        function copyGeneralLink() {
+            const copyText = document.getElementById("general-link");
+            copyText.style.display = "block";
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            copyText.style.display = "none";
+            alert("Enlace público copiado: " + copyText.value);
         }
     </script>
 </body>
