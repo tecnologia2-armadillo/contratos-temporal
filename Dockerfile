@@ -26,7 +26,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar el código base de la aplicación (El CSS/JS es nativo con CDN, no necesitamos Node)
+# Copiar el código base de la aplicación
 COPY . .
 
 # Instalar las dependencias de Composer (optimizado para producción)
@@ -36,9 +36,12 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cambiar la raíz del servidor Apache a la carpeta 'public' de Laravel
+# Cambiar la raíz del servidor Apache y PERMITIR .htaccess (AllowOverride All)
 RUN sed -i -e 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i -e 's|<Directory /var/www/>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf
+    && echo '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' >> /etc/apache2/sites-available/000-default.conf
 
 # Exponer el puerto 80
 EXPOSE 80
