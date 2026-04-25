@@ -115,6 +115,15 @@
             border-color: var(--text-main);
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: rgba(148, 163, 184, 0.5); /* muted */
+            color: var(--text-main);
+            border: none;
+            transform: none !important;
+        }
+
         .footer {
             text-align: center;
             color: var(--text-muted);
@@ -164,6 +173,18 @@
             align-items: center;
             gap: 0.75rem;
         }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .contract-text {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -180,7 +201,7 @@
 
             <p style="margin-bottom: 1rem; color: var(--text-muted);">Hola, <strong>{{ $person->nombre_completo }}</strong>. Por favor revisa el siguiente contrato y firma al final.</p>
             
-            <div class="contract-text">
+            <div class="contract-text" id="contract-box">
                 <p style="text-align: justify; margin-bottom: 15px;">Por medio del presente acuerdo, la persona que suscribe, en adelante EL CONTRATISTA, declara bajo la gravedad de juramento que actuará como proveedor independiente de servicios de apoyo logístico para eventos de cualquier naturaleza organizados por OPERADORES ARMADILLO S.A.S., NIT 901.346.590-8, con domicilio en Bogotá D.C., en adelante EL CONTRATANTE, desempeñando funciones como control de accesos, lectura de boletería, manejo de tránsito, apoyo en alimentación u otras tareas logísticas definidas para cada evento, las cuales ejecutará de manera autónoma, bajo su cuenta y riesgo, con sus conocimientos, habilidades y buena disposición, sin que exista vínculo laboral ni relación de subordinación; las indicaciones de coordinadores o directores corresponden únicamente a lineamientos operativos para la adecuada prestación del servicio contratado. EL CONTRATANTE facilitará prendas logísticas, herramientas y materiales necesarios para la buena prestación de los servicios, los cuales se entregan a título de préstamo, no constituyen dotación laboral y deberán ser devueltos al finalizar la labor. EL CONTRATISTA manifiesta que su participación no implica exclusividad ni continuidad y que podrá prestar servicios a otras personas naturales o jurídicas sin restricción alguna, siendo convocado únicamente cuando EL CONTRATANTE requiera sus servicios, pudiendo aceptarlos o rechazarlos libremente.</p>
         
                 <p style="text-align: justify; margin-bottom: 15px;">Declara asimismo que conoce y acepta que la prestación del servicio se realizará en la franja horaria requerida para el evento, conforme a las necesidades operativas informadas previamente y aceptadas por el proveedor independiente al confirmar su disponibilidad, sin que ello implique dirección o subordinación laboral, asumiendo los riesgos inherentes a su actividad y la plena responsabilidad por la calidad y cuidado en el desarrollo de sus actividades, comprometiéndose a cumplir las normas de seguridad, convivencia y protocolos exigidos en cada sitio de trabajo, ética y buena conducta en sus relaciones con EL CONTRATANTE, otros contratistas, clientes y terceros, así como a asistir a las inducciones informativas o de orientación general que se realicen, sin que estas constituyan subordinación.</p>
@@ -227,7 +248,7 @@
 
                 <div class="controls">
                     <button type="button" class="btn btn-outline" id="clear">Limpiar Firma</button>
-                    <button type="submit" class="btn btn-primary" id="save">Firmar y Descargar PDF</button>
+                    <button type="submit" class="btn btn-primary" id="save" disabled>Lee el contrato hasta el final</button>
                 </div>
             </form>
         </div>
@@ -327,6 +348,25 @@
             document.getElementById('save').disabled = true;
             document.getElementById('save').innerText = 'Procesando...';
         });
+
+        // Reader lock logic
+        const contractBox = document.getElementById('contract-box');
+        const saveBtn = document.getElementById('save');
+        let hasScrolledToBottom = false;
+
+        function checkScroll() {
+            if (hasScrolledToBottom) return;
+            // Add a buffer of 20px to account for any rounding issues in different browsers
+            if (contractBox.scrollHeight - contractBox.scrollTop <= contractBox.clientHeight + 20) {
+                hasScrolledToBottom = true;
+                saveBtn.disabled = false;
+                saveBtn.innerText = 'Firmar y Descargar PDF';
+            }
+        }
+
+        // Check initially in case screen is large enough that scroll isn't needed
+        setTimeout(checkScroll, 100);
+        contractBox.addEventListener('scroll', checkScroll);
     </script>
 </body>
 </html>

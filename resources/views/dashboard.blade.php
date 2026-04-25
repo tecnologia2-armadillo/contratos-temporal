@@ -727,28 +727,54 @@
             document.getElementById('shareModal').style.display = 'none';
         }
 
-        function copyUrl() {
-            const copyText = document.getElementById("share-url");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = "¡Copiado!";
-            btn.style.backgroundColor = "#10b981";
-            
-            setTimeout(() => {
-                btn.innerText = "Copiar";
-                btn.style.backgroundColor = "";
-            }, 2000);
-        }
-
         // Close modal on click outside
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
             if (event.target == modal) {
                 closeModal();
             }
+        }
+
+        // Generic modern copy function
+        function setClipboard(text, successCallback) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    if (successCallback) successCallback();
+                }).catch(err => {
+                    alert("Error al copiar enlace: " + err);
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    if (successCallback) successCallback();
+                } catch (err) {
+                    alert("Tu navegador no soporta copiado por seguridad.");
+                }
+                textArea.remove();
+            }
+        }
+
+        function copyUrl() {
+            const urlToCopy = document.getElementById("share-url").value;
+            const btn = document.getElementById('copy-btn');
+            
+            setClipboard(urlToCopy, () => {
+                btn.innerText = "¡Copiado!";
+                btn.style.backgroundColor = "#10b981";
+                
+                setTimeout(() => {
+                    btn.innerText = "Copiar";
+                    btn.style.backgroundColor = "";
+                }, 2000);
+            });
         }
 
         // Tab Switcher
@@ -762,13 +788,10 @@
 
         // Copy General Link
         function copyGeneralLink() {
-            const copyText = document.getElementById("general-link");
-            copyText.style.display = "block";
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            copyText.style.display = "none";
-            alert("Enlace público copiado: " + copyText.value);
+            const urlToCopy = document.getElementById("general-link").value;
+            setClipboard(urlToCopy, () => {
+                alert("Enlace público copiado: " + urlToCopy);
+            });
         }
     </script>
 </body>
