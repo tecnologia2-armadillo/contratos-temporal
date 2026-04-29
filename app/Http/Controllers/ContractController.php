@@ -22,11 +22,6 @@ class ContractController extends Controller
     public function show($token)
     {
         $person = Personal::where('signature_token', $token)->firstOrFail();
-        
-        if ($person->contrato_firmado) {
-            return view('contract.success', compact('person'));
-        }
-        
         return view('contract.sign', compact('person'));
     }
 
@@ -37,16 +32,8 @@ class ContractController extends Controller
     {
         $person = Personal::where('signature_token', $token)->firstOrFail();
 
-        // Prevención de duplicados: Si ya está firmado, redirigir a éxito inmediatamente
-        if ($person->contrato_firmado && !empty($person->contrato_src)) {
-            return view('contract.success', [
-                'person' => $person, 
-                'driveLink' => $person->contrato_src
-            ]);
-        }
-
         $request->validate([
-            'signature' => 'required', // This will be the base64 string
+            'signature' => 'required',
         ]);
 
         $signatureData = $request->input('signature');
@@ -64,16 +51,10 @@ class ContractController extends Controller
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName);
 
             if ($driveResult && isset($driveResult['link'])) {
-                // Update person record
-                $person->update([
-                    'contrato_firmado' => true,
-                    'contrato_src' => $driveResult['link']
-                ]);
-                
                 return view('contract.success', [
-                    'person' => $person, 
+                    'person'   => $person,
                     'driveLink' => $driveResult['link'],
-                    'driveId' => $driveResult['id']
+                    'driveId'  => $driveResult['id']
                 ]);
             }
         } catch (\Exception $e) {

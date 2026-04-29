@@ -46,8 +46,6 @@ class Personal extends Model
         'per_status_personal',
         'per_foto',
         'per_detalle_status',
-        'contrato_firmado',
-        'contrato_src',
         'signature_token',
     ];
 
@@ -126,5 +124,17 @@ class Personal extends Model
     public function perfiles()
     {
         return $this->belongsToMany(Perfilamiento::class, 'personal_perfilamiento', 'per_id', 'perf_id');
+    }
+
+    public function contratos()
+    {
+        return $this->belongsToMany(
+            Contrato::class,
+            'contrato_personal',
+            'personal_id',
+            'contrato_id',
+            'per_id',
+            'id'
+        )->withPivot('ip_firma', 'contrato_src')->withTimestamps();
     }
 }

@@ -23,6 +23,15 @@ class PersonalNoVinculado extends Model
         'banco',
         'identificacion',
         'tipo_identificacion',
-        'contrato_src',
     ];
+
+    public function contratos()
+    {
+        return $this->belongsToMany(
+            Contrato::class,
+            'contrato_personal_no_vinculado',
+            'personal_no_vinculado_id',
+            'contrato_id'
+        )->withPivot('ip_firma', 'contrato_src')->withTimestamps();
+    }
 }

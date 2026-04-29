@@ -104,19 +104,18 @@ class PersonalNoVinculadoController extends Controller
 
         // Save row to database
         $model = PersonalNoVinculado::create([
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'telefono' => $request->telefono,
-            'correo' => $request->correo,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'numero_cuenta' => $request->numero_cuenta,
-            'tipo_cuenta' => $request->tipo_cuenta,
-            'banco' => $request->banco,
-            'identificacion' => $request->identificacion,
+            'nombre'              => $request->nombre,
+            'apellido'            => $request->apellido,
+            'telefono'            => $request->telefono,
+            'correo'              => $request->correo,
+            'fecha_nacimiento'    => $request->fecha_nacimiento,
+            'numero_cuenta'       => $request->numero_cuenta,
+            'tipo_cuenta'         => $request->tipo_cuenta,
+            'banco'               => $request->banco,
+            'identificacion'      => $request->identificacion,
             'tipo_identificacion' => $request->tipo_identificacion,
-            'contrato_src' => $driveLink
         ]);
 
-        return view('contract.success_no_vinculado', compact('model', 'driveLink'));
+        return view('contract.success_no_vinculado', compact('model'));
     }
 }

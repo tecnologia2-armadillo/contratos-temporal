@@ -425,7 +425,8 @@
                 <h2>Personal de Armadillo</h2>
                 <p style="color: var(--text-muted); font-size: 0.875rem;">Gestión centralizada con filtros avanzados.</p>
             </div>
-            <div>
+            <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+                <a href="{{ route('contratos.index') }}" class="btn-action" style="text-decoration:none;">📋 Ver Contratos</a>
                 <button class="btn-action" onclick="copyGeneralLink()">🔗 Copiar Link No Vinculado</button>
                 <input type="text" id="general-link" value="{{ route('contract.no_vinculado.show') }}" style="display:none; position:absolute;">
             </div>
@@ -464,7 +465,6 @@
                             <th>Información Bancaria</th>
                             <th>Ubicación</th>
                             <th>Estado</th>
-                            <th>Contrato</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -485,7 +485,6 @@
                             <th>Contacto</th>
                             <th>Nacimiento</th>
                             <th>Información Bancaria</th>
-                            <th>Contrato</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -527,7 +526,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url": "{{ route('dashboard') }}",
+                    "url": "{{ route('dashboard.personal_data') }}",
                     "data": function(d) {
                         d.birth_start = $('#birth-start').val();
                         d.birth_end = $('#birth-end').val();
@@ -590,28 +589,11 @@
                         }
                     },
                     { 
-                        "data": "contrato_firmado",
-                        "render": function(data, type, row) {
-                            let badge = data 
-                                ? `<span class="status-badge" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Firmado</span>`
-                                : `<span class="status-badge" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Pendiente</span>`;
-                            
-                            let link = row.contrato_src 
-                                ? `<a href="${row.contrato_src}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>`
-                                : '';
-                            
-                            return badge + link;
-                        }
-                    },
-                    { 
                         "data": "signature_token",
                         "render": function(data, type, row) {
-                            if (!row.contrato_firmado) {
-                                return `<button class="btn-action" onclick="showShareModal('${row.nombre_completo}', '${signBaseUrl}/${data}')">
-                                            🔗 Compartir
-                                        </button>`;
-                            }
-                            return `<span style="color: var(--text-muted); font-size: 0.7rem;">Finalizado</span>`;
+                            return `<button class="btn-action" onclick="showShareModal('${row.nombre_completo}', '${signBaseUrl}/${data}')">
+                                        🔗 Compartir
+                                    </button>`;
                         }
                     }
                 ],
@@ -679,16 +661,6 @@
                                         <span class="bank-name">${row.banco} (${row.tipo_cuenta})</span>
                                         <span class="account-number">${data}</span>
                                     </div>`;
-                        }
-                    },
-                    { 
-                        "data": "contrato_src",
-                        "render": function(data, type, row) {
-                            if (data) {
-                                return `<span class="status-badge" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Firmado</span>
-                                        <a href="${data}" target="_blank" style="display: block; font-size: 0.7rem; color: var(--primary); margin-top: 0.5rem; text-decoration: none;">📄 Ver Contrato</a>`;
-                            }
-                            return `<span class="status-badge" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Sin Contrato</span>`;
                         }
                     }
                 ],
