@@ -63,4 +63,34 @@ class GoogleDriveService
             'link' => $file->webViewLink
         ];
     }
+
+    /**
+     * Create a folder in Google Drive.
+     *
+     * @param string $folderName
+     * @param string|null $parentFolderId
+     * @return string Folder ID
+     */
+    public function createFolder($folderName, $parentFolderId = null)
+    {
+        if (!$this->driveService) {
+            throw new \Exception("Google Drive Service semi-initialized");
+        }
+
+        $parentFolderId = $parentFolderId ?: env('GOOGLE_DRIVE_MAIN_FOLDER_ID');
+
+        $fileMetadata = new DriveFile([
+            'name' => $folderName,
+            'mimeType' => 'application/vnd.google-apps.folder',
+            'parents' => $parentFolderId ? [$parentFolderId] : []
+        ]);
+
+        $folder = $this->driveService->files->create($fileMetadata, [
+            'fields' => 'id',
+            'supportsAllDrives' => true,
+            'supportsTeamDrives' => true,
+        ]);
+
+        return $folder->id;
+    }
 }

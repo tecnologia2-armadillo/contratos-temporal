@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Contrato;
 use App\Models\Personal;
 use App\Models\PersonalNoVinculado;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ContratoController extends Controller
 {
+    protected $driveService;
+
+    public function __construct(GoogleDriveService $driveService)
+    {
+        $this->driveService = $driveService;
+    }
+
     /**
      * Index — lista de contratos (DataTables server-side) o vista.
      */
@@ -55,7 +64,30 @@ class ContratoController extends Controller
             'fecha_fin'   => 'required|date|after_or_equal:fecha_inicio',
         ]);
 
-        $contrato = Contrato::create($validated);
+        $driveFolderId = null;
+        $drivePersonalId = null;
+        $driveNVId = null;
+
+        try {
+            // 1. Carpeta Principal del Contrato
+            $folderName = "{$validated['nombre']} ({$validated['fecha_inicio']} - {$validated['fecha_fin']})";
+            $driveFolderId = $this->driveService->createFolder($folderName);
+
+            if ($driveFolderId) {
+                // 2. Subcarpeta Personal
+                $drivePersonalId = $this->driveService->createFolder("Personal", $driveFolderId);
+                // 3. Subcarpeta Personal No Vinculado
+                $driveNVId = $this->driveService->createFolder("Personal No Vinculado", $driveFolderId);
+            }
+        } catch (\Exception $e) {
+            Log::error("Error creating Drive folder structure for contract: " . $e->getMessage());
+        }
+
+        $contrato = Contrato::create(array_merge($validated, [
+            'drive_folder_id' => $driveFolderId,
+            'drive_personal_folder_id' => $drivePersonalId,
+            'drive_nv_folder_id' => $driveNVId,
+        ]));
 
         return response()->json([
             'success'  => true,

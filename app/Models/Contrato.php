@@ -16,6 +16,9 @@ class Contrato extends Model
         'terminos',
         'fecha_inicio',
         'fecha_fin',
+        'drive_folder_id',
+        'drive_personal_folder_id',
+        'drive_nv_folder_id',
     ];
 
     protected $casts = [

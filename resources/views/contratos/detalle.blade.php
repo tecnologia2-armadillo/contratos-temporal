@@ -174,7 +174,7 @@
             $('#personalTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { url: `/contratos/${contratoId}/personal` },
+                ajax: { url: "{{ route('contratos.personal', $contrato->id) }}" },
                 columns: [
                     {
                         data: 'nombre_completo',
@@ -239,7 +239,7 @@
             $('#personalNVTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { url: `/contratos/${contratoId}/personal-no-vinculado` },
+                ajax: { url: "{{ route('contratos.personal_nv', $contrato->id) }}" },
                 columns: [
                     {
                         data: 'nombre',

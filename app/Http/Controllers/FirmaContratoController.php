@@ -52,8 +52,7 @@ class FirmaContratoController extends Controller
             return redirect()->route('firmar.sign.show', [$contrato_id, $personal->signature_token]);
         }
 
-        // Comentamos la búsqueda de personal no vinculado para permitir registros repetidos
-        /*
+        // Buscamos si ya existe en personal no vinculado para no duplicar
         $nv = PersonalNoVinculado::where('tipo_identificacion', $tipo)
                                   ->where('identificacion', $numero)
                                   ->first();
@@ -61,10 +60,8 @@ class FirmaContratoController extends Controller
         if ($nv) {
             return redirect()->route('firmar.sign_nv.show', [$contrato_id, $nv->id]);
         }
-        */
 
-        // Si no es personal vinculado (el que está en nómina), lo llevamos a registrarse y firmar
-        // Esto permite crear registros repetidos en la tabla personal_no_vinculado cada vez que firmen
+        // Si no es personal vinculado ni no vinculado existente, lo llevamos a registrarse
         return redirect()->route('firmar.registro_nv.show', [
             'contrato_id' => $contrato_id,
             'tipo' => $tipo,
@@ -101,11 +98,18 @@ class FirmaContratoController extends Controller
             'signature' => 'required',
         ]);
 
-        // 1. Crear el registro de Personal No Vinculado
-        $person = PersonalNoVinculado::create($request->only([
-            'nombre', 'apellido', 'telefono', 'correo', 'fecha_nacimiento',
-            'numero_cuenta', 'tipo_cuenta', 'banco', 'identificacion', 'tipo_identificacion'
-        ]));
+        // Verificación final de duplicado antes de crear
+        $person = PersonalNoVinculado::where('tipo_identificacion', $request->tipo_identificacion)
+                                      ->where('identificacion', $request->identificacion)
+                                      ->first();
+
+        if (!$person) {
+            // 1. Crear el registro solo si no existe
+            $person = PersonalNoVinculado::create($request->only([
+                'nombre', 'apellido', 'telefono', 'correo', 'fecha_nacimiento',
+                'numero_cuenta', 'tipo_cuenta', 'banco', 'identificacion', 'tipo_identificacion'
+            ]));
+        }
 
         // 2. Generar el PDF
         $pdf = Pdf::loadView('contratos.pdf_contrato', [
@@ -121,7 +125,7 @@ class FirmaContratoController extends Controller
         $driveLink = null;
         try {
             $fileName = "Contrato_{$contrato->id}_{$person->identificacion}_{$person->apellido}.pdf";
-            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName);
+            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_nv_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];
             }
@@ -186,7 +190,7 @@ class FirmaContratoController extends Controller
         $driveLink = null;
         try {
             $fileName    = "Contrato_{$contrato->id}_{$person->per_num_doc}_{$person->per_primer_apellido}.pdf";
-            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName);
+            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_personal_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];
             }
@@ -253,7 +257,7 @@ class FirmaContratoController extends Controller
         $driveLink = null;
         try {
             $fileName    = "Contrato_{$contrato->id}_{$person->identificacion}_{$person->apellido}.pdf";
-            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName);
+            $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_nv_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];
             }

@@ -296,17 +296,36 @@
 
         function closeQrModal() { document.getElementById('qrModal').classList.remove('open'); }
 
-        function copyToClipboard(url) {
+        function copyToClipboard(text) {
+            // Intento con la API moderna
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(url).then(() => showToast('success', '🔗 Link copiado al portapapeles.'));
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('success', '🔗 Link copiado al portapapeles.');
+                }).catch(err => {
+                    fallbackCopy(text);
+                });
             } else {
-                const ta = document.createElement('textarea');
-                ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-                document.body.appendChild(ta); ta.select();
-                try { document.execCommand('copy'); showToast('success', '🔗 Link copiado.'); }
-                catch(e) { showToast('error', 'No se pudo copiar.'); }
-                ta.remove();
+                fallbackCopy(text);
             }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if(successful) showToast('success', '🔗 Link copiado.');
+                else showToast('error', 'No se pudo copiar.');
+            } catch (err) {
+                showToast('error', 'Error al copiar.');
+            }
+            document.body.removeChild(textArea);
         }
 
         // Cerrar modal QR al hacer click fuera
