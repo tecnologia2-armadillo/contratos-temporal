@@ -80,8 +80,6 @@
     <div class="header">
         <h1>{{ $contrato->nombre }}</h1>
         <p>ARMADILLO &ndash; Operaciones Temporales &nbsp;|&nbsp;
-            Vigencia: {{ \Carbon\Carbon::parse($contrato->fecha_inicio)->format('d/m/Y') }} &ndash;
-            {{ \Carbon\Carbon::parse($contrato->fecha_fin)->format('d/m/Y') }}
         </p>
     </div>
 
