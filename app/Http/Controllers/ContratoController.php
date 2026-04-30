@@ -155,6 +155,16 @@ class ContratoController extends Controller
             });
         }
 
+        // Filtros específicos
+        if ($request->filled('nombre')) {
+            $nombre = $request->nombre;
+            $query->where(DB::raw("CONCAT(per_primer_nombre, ' ', per_segundo_nombre, ' ', per_primer_apellido, ' ', per_segundo_apellido)"), 'ilike', "%{$nombre}%");
+        }
+
+        if ($request->filled('identificacion')) {
+            $query->where('per_num_doc', 'ilike', "%{$request->identificacion}%");
+        }
+
         $totalRecords    = Personal::count();
         $filteredRecords = $query->count();
 
@@ -201,6 +211,16 @@ class ContratoController extends Controller
                   ->orWhere('telefono', 'ilike', "%{$search}%")
                   ->orWhere('correo', 'ilike', "%{$search}%");
             });
+        }
+
+        // Filtros específicos
+        if ($request->filled('nombre')) {
+            $nombre = $request->nombre;
+            $query->where(DB::raw("CONCAT(nombre, ' ', apellido)"), 'ilike', "%{$nombre}%");
+        }
+
+        if ($request->filled('identificacion')) {
+            $query->where('identificacion', 'ilike', "%{$request->identificacion}%");
         }
 
         $totalRecords    = PersonalNoVinculado::count();

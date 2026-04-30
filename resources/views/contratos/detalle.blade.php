@@ -88,6 +88,32 @@
         .contract-link:hover { opacity:.75; }
 
         .ip-info { font-size:.7rem; color:var(--text-muted); margin-top:.25rem; font-family:monospace; }
+
+        /* ── Filters Section ── */
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+            animation: fadeUp .4s ease-out;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .filter-group label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
+        .filter-group input { 
+            background: var(--input-bg); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 0.6rem; 
+            padding: 0.6rem 1rem; 
+            color: white; 
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .filter-group input:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
@@ -114,6 +140,18 @@
                 </div>
             </div>
             <a href="{{ route('contratos.index') }}" class="back-btn">← Volver a Contratos</a>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="filter-nombre">Nombre del Trabajador</label>
+                <input type="text" id="filter-nombre" placeholder="Ej: Juan Perez...">
+            </div>
+            <div class="filter-group">
+                <label for="filter-identificacion">Número de Identificación</label>
+                <input type="text" id="filter-identificacion" placeholder="Ej: 12345678...">
+            </div>
         </div>
 
         <!-- Tabs -->
@@ -174,7 +212,13 @@
             $('#personalTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { url: "{{ route('contratos.personal', $contrato->id) }}" },
+                ajax: { 
+                    url: "{{ route('contratos.personal', $contrato->id) }}",
+                    data: function(d) {
+                        d.nombre = $('#filter-nombre').val();
+                        d.identificacion = $('#filter-identificacion').val();
+                    }
+                },
                 columns: [
                     {
                         data: 'nombre_completo',
@@ -239,7 +283,13 @@
             $('#personalNVTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { url: "{{ route('contratos.personal_nv', $contrato->id) }}" },
+                ajax: { 
+                    url: "{{ route('contratos.personal_nv', $contrato->id) }}",
+                    data: function(d) {
+                        d.nombre = $('#filter-nombre').val();
+                        d.identificacion = $('#filter-identificacion').val();
+                    }
+                },
                 columns: [
                     {
                         data: 'nombre',
@@ -283,6 +333,12 @@
                 ],
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
                 dom: 'lrtip', pageLength: 10, responsive: true
+            });
+
+            // Re-draw tables on filter input
+            $('#filter-nombre, #filter-identificacion').on('keyup change', function() {
+                $('#personalTable').DataTable().draw();
+                $('#personalNVTable').DataTable().draw();
             });
         });
 
