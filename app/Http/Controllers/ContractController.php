@@ -42,7 +42,8 @@ class ContractController extends Controller
         $pdf = Pdf::loadView('contract.pdf', [
             'person' => $person,
             'signature' => $signatureData,
-            'date' => now()->format('d/m/Y H:i')
+            'date' => now()->format('d/m/Y H:i'),
+            'ip'   => $request->ip()
         ]);
 
         // Upload to Google Drive

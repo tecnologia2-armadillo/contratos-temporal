@@ -85,7 +85,8 @@ class PersonalNoVinculadoController extends Controller
         $pdf = Pdf::loadView('contract.pdf_no_vinculado', [
             'person' => $person,
             'signature' => $signatureData,
-            'date' => now()->format('d/m/Y H:i')
+            'date' => now()->format('d/m/Y H:i'),
+            'ip' => $request->ip()
         ]);
 
         // Upload to Google Drive using the environment variable

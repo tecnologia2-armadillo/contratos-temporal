@@ -403,6 +403,13 @@
             background: var(--primary);
             color: var(--bg-dark);
         }
+
+        /* Toast Notifications */
+        .toast { position:fixed; bottom:2rem; right:2rem; background:var(--bg-card); border:1px solid rgba(255,255,255,.1); border-radius:.75rem; padding:1rem 1.5rem; color:var(--text-main); font-size:.875rem; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.3); z-index:9999; display:none; align-items:center; gap:.75rem; min-width:250px; animation:toastIn .3s ease-out; }
+        .toast.show { display:flex; }
+        .toast.success { border-left:4px solid var(--success); }
+        .toast.error   { border-left:4px solid var(--danger); }
+        @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
     </style>
 </head>
 <body>
@@ -689,7 +696,7 @@
                 height: 200,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                correctLevel : QRCode.Level.H
             });
             
             document.getElementById('shareModal').style.display = 'flex';
@@ -741,6 +748,7 @@
             setClipboard(urlToCopy, () => {
                 btn.innerText = "¡Copiado!";
                 btn.style.backgroundColor = "#10b981";
+                showToast('success', "🔗 Link de firma copiado.");
                 
                 setTimeout(() => {
                     btn.innerText = "Copiar";
@@ -758,13 +766,27 @@
             $(`#${tabId}`).addClass('active');
         }
 
+        let toastTimer;
+        function showToast(type, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = type === 'success' ? '✅' : '❌';
+            toast.className = `toast show ${type}`;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { toast.className = 'toast'; }, 3500);
+        }
+
         // Copy General Link
         function copyGeneralLink() {
             const urlToCopy = document.getElementById("general-link").value;
             setClipboard(urlToCopy, () => {
-                alert("Enlace público copiado: " + urlToCopy);
+                showToast('success', "🔗 Link copiado al portapapeles.");
             });
         }
     </script>
+    <div id="toast" class="toast">
+        <span id="toastIcon"></span>
+        <span id="toastMsg"></span>
+    </div>
 </body>
 </html>

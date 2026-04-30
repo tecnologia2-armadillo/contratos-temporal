@@ -119,6 +119,7 @@ class FirmaContratoController extends Controller
             'num_doc'   => $person->identificacion,
             'signature' => $request->input('signature'),
             'date'      => now()->format('d/m/Y H:i'),
+            'ip'        => $request->ip(),
         ]);
 
         // 3. Subir a Drive
@@ -185,6 +186,7 @@ class FirmaContratoController extends Controller
             'num_doc'   => $person->per_num_doc,
             'signature' => $request->input('signature'),
             'date'      => now()->format('d/m/Y H:i'),
+            'ip'        => $request->ip(),
         ]);
 
         $driveLink = null;
@@ -252,6 +254,7 @@ class FirmaContratoController extends Controller
             'num_doc'   => $person->identificacion,
             'signature' => $request->input('signature'),
             'date'      => now()->format('d/m/Y H:i'),
+            'ip'        => $request->ip(),
         ]);
 
         $driveLink = null;
