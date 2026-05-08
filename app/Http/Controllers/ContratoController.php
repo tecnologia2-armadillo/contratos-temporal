@@ -27,6 +27,11 @@ class ContratoController extends Controller
         if ($request->ajax()) {
             $query = Contrato::query();
 
+            // Filtrar inactivos por defecto
+            if ($request->input('show_inactive') !== 'true') {
+                $query->where('activo', true);
+            }
+
             if ($request->has('search') && $request->search['value']) {
                 $search = $request->search['value'];
                 $query->where('nombre', 'ilike', "%{$search}%");
@@ -84,6 +89,7 @@ class ContratoController extends Controller
         }
 
         $contrato = Contrato::create(array_merge($validated, [
+            'activo' => true,
             'drive_folder_id' => $driveFolderId,
             'drive_personal_folder_id' => $drivePersonalId,
             'drive_nv_folder_id' => $driveNVId,
@@ -116,6 +122,22 @@ class ContratoController extends Controller
             'success'  => true,
             'message'  => 'Contrato actualizado correctamente.',
             'contrato' => $contrato,
+        ]);
+    }
+
+    /**
+     * Alternar estado activo/inactivo.
+     */
+    public function toggleActivo($id)
+    {
+        $contrato = Contrato::findOrFail($id);
+        $contrato->activo = !$contrato->activo;
+        $contrato->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $contrato->activo ? 'Contrato habilitado.' : 'Contrato inhabilitado.',
+            'activo'  => $contrato->activo,
         ]);
     }
 

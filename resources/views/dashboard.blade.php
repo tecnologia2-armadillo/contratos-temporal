@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,8 +195,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* DataTables Custom Styles */
@@ -225,11 +233,13 @@
             color: var(--text-main);
         }
 
-        .dataTables_filter, .dataTables_length {
+        .dataTables_filter,
+        .dataTables_length {
             margin-bottom: 1.5rem;
         }
 
-        .dataTables_filter input, .dataTables_length select {
+        .dataTables_filter input,
+        .dataTables_length select {
             background-color: rgba(15, 23, 42, 0.5) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 0.5rem !important;
@@ -352,8 +362,15 @@
         }
 
         @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .qr-container {
@@ -405,13 +422,52 @@
         }
 
         /* Toast Notifications */
-        .toast { position:fixed; bottom:2rem; right:2rem; background:var(--bg-card); border:1px solid rgba(255,255,255,.1); border-radius:.75rem; padding:1rem 1.5rem; color:var(--text-main); font-size:.875rem; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.3); z-index:9999; display:none; align-items:center; gap:.75rem; min-width:250px; animation:toastIn .3s ease-out; }
-        .toast.show { display:flex; }
-        .toast.success { border-left:4px solid var(--success); }
-        .toast.error   { border-left:4px solid var(--danger); }
-        @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: .75rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-main);
+            font-size: .875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: .75rem;
+            min-width: 250px;
+            animation: toastIn .3s ease-out;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
     </style>
 </head>
+
 <body>
     <nav>
         <div class="nav-logo">
@@ -419,7 +475,8 @@
         </div>
         <div class="user-info">
             <span class="user-name" id="user-display">Hola, <strong>{{ Session::get('username') }}</strong></span>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;"
+                onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Saliendo...';">
                 @csrf
                 <button type="submit" class="logout-btn">Cerrar Sesión</button>
             </form>
@@ -430,12 +487,15 @@
         <div class="page-header">
             <div>
                 <h2>Personal de Armadillo</h2>
-                <p style="color: var(--text-muted); font-size: 0.875rem;">Gestión centralizada con filtros avanzados.</p>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Gestión centralizada con filtros avanzados.
+                </p>
             </div>
             <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
-                <a href="{{ route('contratos.index') }}" class="btn-action" style="text-decoration:none;">📋 Ver Contratos</a>
+                <a href="{{ route('contratos.index') }}" class="btn-action" style="text-decoration:none;">📋 Ver
+                    Contratos</a>
                 <button class="btn-action" onclick="copyGeneralLink()">🔗 Copiar Link No Vinculado</button>
-                <input type="text" id="general-link" value="{{ route('contract.no_vinculado.show') }}" style="display:none; position:absolute;">
+                <input type="text" id="general-link" value="{{ route('contract.no_vinculado.show') }}"
+                    style="display:none; position:absolute;">
             </div>
         </div>
 
@@ -506,16 +566,19 @@
     <div id="shareModal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title" style="margin-bottom: 0.5rem;">Cargar Contrato</h3>
-            <p style="color: var(--text-muted); font-size: 0.875rem;">Escanea el QR o copia el enlace para compartir con el trabajador.</p>
-            
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Escanea el QR o copia el enlace para compartir con
+                el trabajador.</p>
+
             <div class="qr-container" id="qrcode"></div>
-            
+
             <div class="share-link">
-                <input type="text" id="share-url" readonly style="background:transparent; border:none; color:white; width:100%; outline:none; font-size: 0.75rem;">
+                <input type="text" id="share-url" readonly
+                    style="background:transparent; border:none; color:white; width:100%; outline:none; font-size: 0.75rem;">
                 <button class="copy-btn" id="copy-btn" onclick="copyUrl()">Copiar</button>
             </div>
-            
-            <button class="btn-outline" onclick="closeModal()" style="margin-top: 1.5rem; width: 100%; border-radius: 0.5rem; padding: 0.75rem;">Cerrar</button>
+
+            <button class="btn-outline" onclick="closeModal()"
+                style="margin-top: 1.5rem; width: 100%; border-radius: 0.5rem; padding: 0.75rem;">Cerrar</button>
         </div>
     </div>
 
@@ -523,9 +586,9 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const signBaseUrl = "{{ route('contract.show', '') }}";
 
             // DataTables Initialization
@@ -534,20 +597,20 @@
                 "serverSide": true,
                 "ajax": {
                     "url": "{{ route('dashboard.personal_data') }}",
-                    "data": function(d) {
+                    "data": function (d) {
                         d.birth_start = $('#birth-start').val();
                         d.birth_end = $('#birth-end').val();
                     }
                 },
                 "columns": [
-                    { 
+                    {
                         "data": "nombre_completo",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             let perfiles = row.perfiles.map(p => p.perf_nombre_perfil).join(', ');
-                            let avatar = row.per_foto 
-                                ? `<img src="${row.per_foto}" alt="${data}">` 
+                            let avatar = row.per_foto
+                                ? `<img src="${row.per_foto}" alt="${data}">`
                                 : `<div class="avatar-placeholder">${row.per_primer_nombre.charAt(0)}${row.per_primer_apellido.charAt(0)}</div>`;
-                            
+
                             return `<div class="user-cell">
                                         <div class="avatar">${avatar}</div>
                                         <div>
@@ -557,24 +620,24 @@
                                     </div>`;
                         }
                     },
-                    { 
+                    {
                         "data": "per_num_doc",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div style="font-size: 0.85rem;">${row.per_tipo_doc}</div>
                                     <div style="font-weight: 600;">${data}</div>`;
                         }
                     },
-                    { 
+                    {
                         "data": "per_correo",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div style="font-size: 0.85rem;">${data}</div>
                                     <div style="color: var(--text-muted);">${row.per_telefono_whatsapp}</div>`;
                         }
                     },
                     { "data": "per_fecha_nacimiento" },
-                    { 
+                    {
                         "data": "id",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             if (row.dato_bancario) {
                                 return `<div class="bank-info">
                                             <span class="bank-name">${row.dato_bancario.banco ? row.dato_bancario.banco.ban_banco_nombre : 'Sin Banco'}</span>
@@ -584,20 +647,20 @@
                             return `<span style="color: var(--text-muted);">Sin datos</span>`;
                         }
                     },
-                    { 
+                    {
                         "data": "ciudad.ciu_nombre",
                         "defaultContent": "N/A"
                     },
-                    { 
+                    {
                         "data": "status.spe_status_personal",
                         "defaultContent": "Activo",
-                        "render": function(data) {
+                        "render": function (data) {
                             return `<span class="status-badge">${data}</span>`;
                         }
                     },
-                    { 
+                    {
                         "data": "signature_token",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<button class="btn-action" onclick="showShareModal('${row.nombre_completo}', '${signBaseUrl}/${data}')">
                                         🔗 Compartir
                                     </button>`;
@@ -613,12 +676,12 @@
             });
 
             // Re-draw table on custom filter change
-            $('#global-search').on('keyup', function() {
+            $('#global-search').on('keyup', function () {
                 table.search(this.value).draw();
                 tableNoVinculado.search(this.value).draw();
             });
 
-            $('#birth-start, #birth-end').on('change', function() {
+            $('#birth-start, #birth-end').on('change', function () {
                 table.draw();
                 tableNoVinculado.draw();
             });
@@ -629,15 +692,15 @@
                 "serverSide": true,
                 "ajax": {
                     "url": "{{ route('dashboard.no_vinculado') }}",
-                    "data": function(d) {
+                    "data": function (d) {
                         d.birth_start = $('#birth-start').val();
                         d.birth_end = $('#birth-end').val();
                     }
                 },
                 "columns": [
-                    { 
+                    {
                         "data": "nombre",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div class="user-cell">
                                         <div class="avatar"><div class="avatar-placeholder">${row.nombre.charAt(0)}${row.apellido.charAt(0)}</div></div>
                                         <div>
@@ -646,24 +709,24 @@
                                     </div>`;
                         }
                     },
-                    { 
+                    {
                         "data": "identificacion",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div style="font-size: 0.85rem;">${row.tipo_identificacion}</div>
                                     <div style="font-weight: 600;">${data}</div>`;
                         }
                     },
-                    { 
+                    {
                         "data": "correo",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div style="font-size: 0.85rem;">${data}</div>
                                     <div style="color: var(--text-muted);">${row.telefono}</div>`;
                         }
                     },
                     { "data": "fecha_nacimiento" },
-                    { 
+                    {
                         "data": "numero_cuenta",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return `<div class="bank-info">
                                         <span class="bank-name">${row.banco} (${row.tipo_cuenta})</span>
                                         <span class="account-number">${data}</span>
@@ -686,19 +749,19 @@
         function showShareModal(name, url) {
             document.getElementById('modal-title').innerText = "Firma de " + name;
             document.getElementById('share-url').value = url;
-            
+
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; // Clear previous QR
-            
+
             qrcode = new QRCode(qrContainer, {
                 text: url,
                 width: 200,
                 height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.Level.H
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.Level.H
             });
-            
+
             document.getElementById('shareModal').style.display = 'flex';
         }
 
@@ -707,7 +770,7 @@
         }
 
         // Close modal on click outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('shareModal');
             if (event.target == modal) {
                 closeModal();
@@ -744,12 +807,12 @@
         function copyUrl() {
             const urlToCopy = document.getElementById("share-url").value;
             const btn = document.getElementById('copy-btn');
-            
+
             setClipboard(urlToCopy, () => {
                 btn.innerText = "¡Copiado!";
                 btn.style.backgroundColor = "#10b981";
                 showToast('success', "🔗 Link de firma copiado.");
-                
+
                 setTimeout(() => {
                     btn.innerText = "Copiar";
                     btn.style.backgroundColor = "";
@@ -761,7 +824,7 @@
         function switchTab(tabId) {
             $('.tab-btn').removeClass('active');
             $('.tab-pane').removeClass('active');
-            
+
             $(`button[onclick="switchTab('${tabId}')"]`).addClass('active');
             $(`#${tabId}`).addClass('active');
         }
@@ -789,4 +852,5 @@
         <span id="toastMsg"></span>
     </div>
 </body>
+
 </html>

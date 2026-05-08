@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,94 +11,536 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #f59e0b; --primary-hover: #d97706;
-            --bg-dark: #0f172a; --bg-card: #1e293b; --bg-modal: #162032;
-            --text-main: #f8fafc; --text-muted: #94a3b8;
-            --success: #10b981; --danger: #ef4444;
-            --border: rgba(255,255,255,0.07); --input-bg: rgba(15,23,42,0.6);
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-modal: #162032;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(255, 255, 255, 0.07);
+            --input-bg: rgba(15, 23, 42, 0.6);
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Outfit',sans-serif; background:radial-gradient(circle at top left,#1e293b,#0f172a); color:var(--text-main); min-height:100vh; }
 
-        nav { background:var(--bg-card); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); box-shadow:0 4px 6px -1px rgba(0,0,0,.15); position:sticky; top:0; z-index:100; }
-        .nav-logo h1 { font-size:1.25rem; font-weight:700; color:var(--primary); }
-        .nav-right { display:flex; align-items:center; gap:1.25rem; }
-        .nav-link { color:var(--text-muted); text-decoration:none; font-size:.875rem; font-weight:600; transition:color .2s; }
-        .nav-link:hover { color:var(--primary); }
-        .logout-btn { background:transparent; color:var(--text-main); border:1px solid rgba(255,255,255,.1); padding:.45rem 1rem; border-radius:.5rem; cursor:pointer; font-size:.875rem; font-family:'Outfit',sans-serif; transition:all .3s; text-decoration:none; }
-        .logout-btn:hover { background:rgba(239,68,68,.1); color:var(--danger); border-color:var(--danger); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        main { padding:2rem; max-width:1400px; margin:0 auto; }
-        .page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; }
-        .page-header h2 { font-size:1.875rem; font-weight:700; }
-        .page-header p { color:var(--text-muted); font-size:.875rem; margin-top:.25rem; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
 
-        .btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-hover)); color:#0f172a; border:none; padding:.6rem 1.25rem; border-radius:.6rem; cursor:pointer; font-size:.875rem; font-weight:700; font-family:'Outfit',sans-serif; transition:all .3s; box-shadow:0 4px 14px rgba(245,158,11,.3); display:inline-flex; align-items:center; gap:.4rem; }
-        .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(245,158,11,.45); }
-        .btn-action { background:rgba(245,158,11,.1); color:var(--primary); border:1px solid rgba(245,158,11,.25); padding:.35rem .75rem; border-radius:.45rem; cursor:pointer; font-size:.75rem; font-weight:600; font-family:'Outfit',sans-serif; transition:all .25s; }
-        .btn-action:hover { background:var(--primary); color:#0f172a; }
-        .btn-view { background:rgba(99,102,241,.12); color:#818cf8; border:1px solid rgba(99,102,241,.25); padding:.35rem .75rem; border-radius:.45rem; cursor:pointer; font-size:.75rem; font-weight:600; font-family:'Outfit',sans-serif; transition:all .25s; text-decoration:none; display:inline-block; }
-        .btn-view:hover { background:#6366f1; color:white; }
+        nav {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        .table-container { background:var(--bg-card); border-radius:1.25rem; padding:1.5rem; border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,.2); overflow-x:auto; animation:fadeUp .5s ease-out; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        .nav-logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
 
-        .dataTables_wrapper { color:var(--text-main); }
-        table.dataTable { border-collapse:collapse !important; margin-top:1rem !important; }
-        table.dataTable thead th { background:rgba(15,23,42,.6); border-bottom:1px solid var(--border) !important; color:var(--text-muted); text-transform:uppercase; font-size:.7rem; letter-spacing:.05em; padding:1rem 1.25rem !important; }
-        table.dataTable tbody td { background:transparent !important; border-bottom:1px solid var(--border); padding:1rem 1.25rem !important; color:var(--text-main); vertical-align:middle; }
-        .dataTables_filter input,.dataTables_length select { background:var(--input-bg) !important; border:1px solid rgba(255,255,255,.1) !important; border-radius:.5rem !important; color:white !important; padding:.4rem .75rem !important; }
-        .dataTables_paginate .paginate_button { background:rgba(255,255,255,.05) !important; border:1px solid transparent !important; border-radius:.4rem !important; color:var(--text-main) !important; transition:all .2s; margin:0 2px; }
-        .dataTables_paginate .paginate_button.current { background:var(--primary) !important; color:#0f172a !important; }
-        .dataTables_paginate .paginate_button:hover:not(.current) { background:var(--primary-hover) !important; color:white !important; }
-        .dataTables_info { color:var(--text-muted) !important; padding-top:1rem !important; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
 
-        .terminos-preview { max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-muted); font-size:.8rem; }
-        .date-chip { display:inline-block; background:rgba(99,102,241,.1); color:#a5b4fc; border:1px solid rgba(99,102,241,.2); padding:.2rem .6rem; border-radius:9999px; font-size:.75rem; font-weight:600; }
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 600;
+            transition: color .2s;
+        }
 
-        .modal-overlay { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.75); backdrop-filter:blur(8px); align-items:center; justify-content:center; }
-        .modal-overlay.open { display:flex; }
-        .modal-box { background:var(--bg-modal); border:1px solid rgba(255,255,255,.08); border-radius:1.25rem; padding:2rem; width:90%; max-width:620px; max-height:90vh; overflow-y:auto; box-shadow:0 25px 60px rgba(0,0,0,.5); animation:modalIn .25s ease-out; }
-        @keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(-8px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
-        .modal-header h3 { font-size:1.25rem; font-weight:700; }
-        .modal-close { background:rgba(255,255,255,.05); border:none; color:var(--text-muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all .2s; }
-        .modal-close:hover { background:rgba(239,68,68,.2); color:var(--danger); }
+        .nav-link:hover {
+            color: var(--primary);
+        }
 
-        .form-group { margin-bottom:1.25rem; }
-        .form-group label { display:block; font-size:.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:600; letter-spacing:.04em; margin-bottom:.5rem; }
-        .form-group input,.form-group textarea { width:100%; background:var(--input-bg); border:1px solid rgba(255,255,255,.1); border-radius:.6rem; color:var(--text-main); padding:.65rem .9rem; font-family:'Outfit',sans-serif; font-size:.9rem; outline:none; transition:border-color .2s; }
-        .form-group input:focus,.form-group textarea:focus { border-color:var(--primary); }
-        .form-group textarea { resize:vertical; min-height:140px; }
-        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-        .form-actions { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1.5rem; }
-        .btn-cancel { background:transparent; border:1px solid rgba(255,255,255,.1); color:var(--text-muted); padding:.6rem 1.25rem; border-radius:.6rem; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.875rem; transition:all .2s; }
-        .btn-cancel:hover { border-color:var(--danger); color:var(--danger); }
+        .logout-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, .1);
+            padding: .45rem 1rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all .3s;
+            text-decoration: none;
+        }
 
-        .btn-link { background:rgba(16,185,129,.1); color:#34d399; border:1px solid rgba(16,185,129,.25); padding:.35rem .75rem; border-radius:.45rem; cursor:pointer; font-size:.75rem; font-weight:600; font-family:'Outfit',sans-serif; transition:all .25s; }
-        .btn-link:hover { background:#10b981; color:white; }
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, .1);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
 
-        .toast { position:fixed; bottom:2rem; right:2rem; background:var(--bg-card); border:1px solid rgba(255,255,255,.1); border-radius:.75rem; padding:1rem 1.5rem; color:var(--text-main); font-size:.875rem; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.3); z-index:9999; display:none; align-items:center; gap:.75rem; min-width:250px; animation:toastIn .3s ease-out; }
-        .toast.show { display:flex; }
-        .toast.success { border-left:4px solid var(--success); }
-        .toast.error   { border-left:4px solid var(--danger); }
-        @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: .875rem;
+            margin-top: .25rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: #0f172a;
+            border: none;
+            padding: .6rem 1.25rem;
+            border-radius: .6rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            transition: all .3s;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, .3);
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, .45);
+        }
+
+        .btn-action {
+            background: rgba(245, 158, 11, .1);
+            color: var(--primary);
+            border: 1px solid rgba(245, 158, 11, .25);
+            padding: .35rem .75rem;
+            border-radius: .45rem;
+            cursor: pointer;
+            font-size: .75rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            transition: all .25s;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        .btn-view {
+            background: rgba(99, 102, 241, .12);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, .25);
+            padding: .35rem .75rem;
+            border-radius: .45rem;
+            cursor: pointer;
+            font-size: .75rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            transition: all .25s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-view:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+            overflow-x: auto;
+            animation: fadeUp .5s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .dataTables_wrapper {
+            color: var(--text-main);
+        }
+
+        table.dataTable {
+            border-collapse: collapse !important;
+            margin-top: 1rem !important;
+        }
+
+        table.dataTable thead th {
+            background: rgba(15, 23, 42, .6);
+            border-bottom: 1px solid var(--border) !important;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: .7rem;
+            letter-spacing: .05em;
+            padding: 1rem 1.25rem !important;
+        }
+
+        table.dataTable tbody td {
+            background: transparent !important;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.25rem !important;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .dataTables_filter input,
+        .dataTables_length select {
+            background: var(--input-bg) !important;
+            border: 1px solid rgba(255, 255, 255, .1) !important;
+            border-radius: .5rem !important;
+            color: white !important;
+            padding: .4rem .75rem !important;
+        }
+
+        .dataTables_paginate .paginate_button {
+            background: rgba(255, 255, 255, .05) !important;
+            border: 1px solid transparent !important;
+            border-radius: .4rem !important;
+            color: var(--text-main) !important;
+            transition: all .2s;
+            margin: 0 2px;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: var(--primary) !important;
+            color: #0f172a !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover:not(.current) {
+            background: var(--primary-hover) !important;
+            color: white !important;
+        }
+
+        .dataTables_info {
+            color: var(--text-muted) !important;
+            padding-top: 1rem !important;
+        }
+
+        .terminos-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-muted);
+            font-size: .8rem;
+        }
+
+        .date-chip {
+            display: inline-block;
+            background: rgba(99, 102, 241, .1);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, .2);
+            padding: .2rem .6rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(0, 0, 0, .75);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-modal);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .5);
+            animation: modalIn .25s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(.96) translateY(-8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, .05);
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, .2);
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: .75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: .04em;
+            margin-bottom: .5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: .6rem;
+            color: var(--text-main);
+            padding: .65rem .9rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: var(--text-muted);
+            padding: .6rem 1.25rem;
+            border-radius: .6rem;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: .875rem;
+            transition: all .2s;
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-link {
+            background: rgba(16, 185, 129, .1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, .25);
+            padding: .35rem .75rem;
+            border-radius: .45rem;
+            cursor: pointer;
+            font-size: .75rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            transition: all .25s;
+        }
+
+        .btn-link:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: .75rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-main);
+            font-size: .875rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: .75rem;
+            min-width: 250px;
+            animation: toastIn .3s ease-out;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
 
         /* QR Modal Styles */
-        .qr-container { display:flex; flex-direction:column; align-items:center; gap:1.5rem; padding:1rem 0; }
-        .qr-box { background:white; padding:1.25rem; border-radius:1rem; box-shadow:0 10px 25px rgba(0,0,0,.2); }
-        .qr-link-display { width:100%; background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:.75rem; padding:.75rem 1rem; color:var(--text-muted); font-size:.85rem; word-break:break-all; text-align:center; }
-        .btn-copy-modal { background:var(--primary); color:#0f172a; border:none; padding:.75rem 1.5rem; border-radius:.6rem; font-weight:700; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .3s; display:flex; align-items:center; gap:.5rem; }
-        .btn-copy-modal:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(245,158,11,.3); }
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+        }
+
+        .qr-link-display {
+            width: 100%;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid var(--border);
+            border-radius: .75rem;
+            padding: .75rem 1rem;
+            color: var(--text-muted);
+            font-size: .85rem;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .btn-copy-modal {
+            background: var(--primary);
+            color: #0f172a;
+            border: none;
+            padding: .75rem 1.5rem;
+            border-radius: .6rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: all .3s;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .btn-copy-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, .3);
+        }
     </style>
 </head>
+
 <body>
     <nav>
-        <div class="nav-logo"><h1>ARMADILLO</h1></div>
+        <div class="nav-logo">
+            <h1>ARMADILLO</h1>
+        </div>
         <div class="nav-right">
             <a href="{{ route('dashboard') }}" class="nav-link">👥 Personal</a>
             <span style="color:var(--primary);font-size:.875rem;font-weight:700;">📋 Contratos</span>
-            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;"
+                onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Saliendo...';">
                 @csrf
                 <button type="submit" class="logout-btn">Cerrar Sesión</button>
             </form>
@@ -109,6 +552,12 @@
             <div>
                 <h2>📋 Contratos</h2>
                 <p>Gestión centralizada de contratos y firmantes.</p>
+                <div style="margin-top: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; color: var(--text-muted);">
+                        <input type="checkbox" id="showInactiveToggle" style="accent-color: var(--primary);">
+                        Mostrar contratos inhabilitados
+                    </label>
+                </div>
             </div>
             <button class="btn-primary" id="btnNuevoContrato">➕ Nuevo Contrato</button>
         </div>
@@ -119,9 +568,9 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Términos (vista previa)</th>
-                        <th>Fecha Inicio</th>
-                        <th>Fecha Fin</th>
-                        <th style="min-width:160px;">Acciones</th>
+                        <th>Vigencia</th>
+                        <th>Estado</th>
+                        <th style="min-width:280px;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -141,11 +590,13 @@
                 <input type="hidden" id="contratoId" value="">
                 <div class="form-group">
                     <label for="nombre">Nombre del Contrato</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Contrato de prestación de servicios 2026">
+                    <input type="text" id="nombre" name="nombre"
+                        placeholder="Ej: Contrato de prestación de servicios 2026">
                 </div>
                 <div class="form-group">
                     <label for="terminos">Términos y Condiciones</label>
-                    <textarea id="terminos" name="terminos" placeholder="Escribe aquí el cuerpo completo del contrato..."></textarea>
+                    <textarea id="terminos" name="terminos"
+                        placeholder="Escribe aquí el cuerpo completo del contrato..."></textarea>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -173,12 +624,25 @@
                 <button class="modal-close" onclick="closeQrModal()">✕</button>
             </div>
             <div class="qr-container">
-                <p style="color:var(--text-muted); font-size:.85rem; text-align:center;">Escanea el código QR para firmar desde tu dispositivo móvil:</p>
+                <p style="color:var(--text-muted); font-size:.85rem; text-align:center;">Escanea el código QR para
+                    firmar desde tu dispositivo móvil:</p>
                 <div class="qr-box" id="qrcode"></div>
                 <div class="qr-link-display" id="qrLinkText"></div>
                 <button class="btn-copy-modal" id="btnCopyFromModal">
                     📋 Copiar Enlace
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Términos -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="termsModalTitle">Términos</h3>
+                <button class="modal-close" onclick="closeTermsModal()">✕</button>
+            </div>
+            <div style="color:var(--text-main); font-size:0.9rem; line-height:1.6; max-height:400px; overflow-y:auto; white-space: pre-wrap; background: rgba(15, 23, 42, 0.3); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border);" id="termsModalContent">
             </div>
         </div>
     </div>
@@ -198,30 +662,97 @@
             table = $('#contratosTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { url: "{{ route('contratos.index') }}" },
+                ajax: { 
+                    url: "{{ route('contratos.index') }}",
+                    data: function(d) {
+                        d.show_inactive = $('#showInactiveToggle').is(':checked') ? 'true' : 'false';
+                    }
+                },
+                createdRow: function(row, data, dataIndex) {
+                    if (data.activo === false || data.activo === 0) {
+                        $(row).css('opacity', '0.6');
+                    }
+                },
                 columns: [
                     { data: 'nombre', render: d => `<div style="font-weight:600;">${d}</div>` },
-                    { data: 'terminos', render: d => `<div class="terminos-preview">${d.length > 80 ? d.substring(0,80)+'…' : d}</div>` },
-                    { data: 'fecha_inicio', render: d => `<span class="date-chip">📅 ${d}</span>` },
-                    { data: 'fecha_fin',    render: d => `<span class="date-chip">📅 ${d}</span>` },
+                    { 
+                        data: 'terminos', 
+                        render: function(data, type, row) {
+                            const preview = data && data.length > 80 ? data.substring(0, 80) + '…' : (data || '');
+                            return `<div class="terminos-preview terms-btn" style="cursor:pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color=''" title="Haz clic para ver términos completos">${preview}</div>`;
+                        }
+                    },
+                    { 
+                        data: null, 
+                        render: function(data, type, row) {
+                            let fi = row.fecha_inicio ? row.fecha_inicio.split('T')[0] : '';
+                            let ff = row.fecha_fin ? row.fecha_fin.split('T')[0] : '';
+                            return `<span class="date-chip">📅 ${fi} al ${ff}</span>`;
+                        } 
+                    },
+                    { 
+                        data: 'activo', 
+                        render: d => d ? `<span style="color:var(--success); font-weight:600; font-size:0.8rem;">● Activo</span>` : `<span style="color:var(--text-muted); font-weight:600; font-size:0.8rem;">● Inactivo</span>` 
+                    },
                     {
                         data: 'id', orderable: false,
                         render: function (data, type, row) {
                             const detalleUrl = "{{ url('/contratos') }}/" + data + "/detalle";
-                            const firmarUrl  = "{{ url('/firmar') }}/" + data;
-                            const t = row.terminos.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
-                            return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-                                <button class="btn-action" onclick="openEditModal(${data},\`${row.nombre}\`,\`${t}\`,'${row.fecha_inicio}','${row.fecha_fin}')">✏️ Editar</button>
+                            const firmarUrl = "{{ url('/firmar') }}/" + data;
+                            
+                            let toggleBtn = row.activo 
+                                ? `<button class="btn-action" style="color:var(--danger); border-color:rgba(239,68,68,0.25); background:rgba(239,68,68,0.1);" onclick="toggleActivo(${data})">🚫 Inhabilitar</button>`
+                                : `<button class="btn-action" style="color:var(--success); border-color:rgba(16,185,129,0.25); background:rgba(16,185,129,0.1);" onclick="toggleActivo(${data})">✅ Habilitar</button>`;
+                            
+                            let firmaBtn = row.activo 
+                                ? `<button class="btn-link" onclick="openQrModal('${firmarUrl}')">🔗 Firma</button>`
+                                : '';
+
+                            return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+                                <button class="btn-action edit-btn">✏️ Editar</button>
                                 <a href="${detalleUrl}" class="btn-view">👁 Ver</a>
-                                <button class="btn-link" onclick="openQrModal('${firmarUrl}')">🔗 Firma</button>
+                                ${firmaBtn}
+                                ${toggleBtn}
                             </div>`;
                         }
                     }
                 ],
-                language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
-                dom: 'lrtip', pageLength: 10, responsive: true, order: [[0,'asc']]
+                language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+                dom: 'lrtip', pageLength: 10, responsive: true, order: [[0, 'asc']]
+            });
+
+            $('#showInactiveToggle').on('change', function() {
+                table.ajax.reload();
+            });
+
+            $('#contratosTable tbody').on('click', '.terms-btn', function() {
+                var data = table.row($(this).closest('tr')).data();
+                if(data) viewTermsModal(data.nombre, data.terminos);
+            });
+
+            $('#contratosTable tbody').on('click', '.edit-btn', function() {
+                var data = table.row($(this).closest('tr')).data();
+                if(data) {
+                    let fi = data.fecha_inicio ? data.fecha_inicio.split('T')[0] : '';
+                    let ff = data.fecha_fin ? data.fecha_fin.split('T')[0] : '';
+                    openEditModal(data.id, data.nombre, data.terminos, fi, ff);
+                }
             });
         });
+
+        function toggleActivo(id) {
+            if(!confirm("¿Estás seguro de cambiar el estado de este contrato?")) return;
+            $.ajax({
+                url: `/contratos/${id}/toggle-activo`,
+                method: 'PATCH',
+                success: function(res) {
+                    if (res.success) { showToast('success', res.message); table.ajax.reload(null, false); }
+                },
+                error: function(xhr) {
+                    showToast('error', 'Error al cambiar estado.');
+                }
+            });
+        }
 
         function openCreateModal() {
             document.getElementById('modalTitle').innerText = 'Nuevo Contrato';
@@ -245,20 +776,25 @@
         document.getElementById('btnNuevoContrato').addEventListener('click', openCreateModal);
         document.getElementById('btnCloseModal').addEventListener('click', closeModal);
         document.getElementById('btnCancelModal').addEventListener('click', closeModal);
-        document.getElementById('contratoModal').addEventListener('click', e => { if(e.target===document.getElementById('contratoModal')) closeModal(); });
+        document.getElementById('contratoModal').addEventListener('click', e => { if (e.target === document.getElementById('contratoModal')) closeModal(); });
 
         document.getElementById('contratoForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            const btnSubmit = document.getElementById('btnSubmitModal');
+            const originalText = btnSubmit.innerText;
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = 'Guardando...';
+
             const id = document.getElementById('contratoId').value;
             const isEdit = id !== '';
             $.ajax({
-                url:    isEdit ? `/contratos/${id}` : "{{ route('contratos.store') }}",
+                url: isEdit ? `/contratos/${id}` : "{{ route('contratos.store') }}",
                 method: isEdit ? 'PUT' : 'POST',
                 data: {
-                    nombre:       $('#nombre').val(),
-                    terminos:     $('#terminos').val(),
+                    nombre: $('#nombre').val(),
+                    terminos: $('#terminos').val(),
                     fecha_inicio: $('#fecha_inicio').val(),
-                    fecha_fin:    $('#fecha_fin').val(),
+                    fecha_fin: $('#fecha_fin').val(),
                 },
                 success: function (res) {
                     if (res.success) { closeModal(); table.ajax.reload(); showToast('success', res.message); }
@@ -266,6 +802,10 @@
                 error: function (xhr) {
                     const errors = xhr.responseJSON?.errors;
                     showToast('error', errors ? Object.values(errors).flat().join(' ') : 'Error al guardar.');
+                },
+                complete: function () {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = originalText;
                 }
             });
         });
@@ -285,14 +825,14 @@
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = '';
             document.getElementById('qrLinkText').innerText = url;
-            
+
             qrcode = new QRCode(qrContainer, {
                 text: url,
                 width: 200,
                 height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
 
             document.getElementById('btnCopyFromModal').onclick = () => copyToClipboard(url);
@@ -325,7 +865,7 @@
             textArea.select();
             try {
                 const successful = document.execCommand('copy');
-                if(successful) showToast('success', '🔗 Link copiado.');
+                if (successful) showToast('success', '🔗 Link copiado.');
                 else showToast('error', 'No se pudo copiar.');
             } catch (err) {
                 showToast('error', 'Error al copiar.');
@@ -335,8 +875,24 @@
 
         // Cerrar modal QR al hacer click fuera
         document.getElementById('qrModal').addEventListener('click', e => {
-            if(e.target === document.getElementById('qrModal')) closeQrModal();
+            if (e.target === document.getElementById('qrModal')) closeQrModal();
+        });
+
+        // Modal de términos
+        function viewTermsModal(nombre, terminos) {
+            document.getElementById('termsModalTitle').innerText = 'Términos: ' + nombre;
+            document.getElementById('termsModalContent').innerText = terminos;
+            document.getElementById('termsModal').classList.add('open');
+        }
+
+        function closeTermsModal() { 
+            document.getElementById('termsModal').classList.remove('open'); 
+        }
+
+        document.getElementById('termsModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('termsModal')) closeTermsModal();
         });
     </script>
 </body>
+
 </html>

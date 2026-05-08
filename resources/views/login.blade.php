@@ -154,7 +154,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('login.post') }}" method="POST">
+            <form action="{{ route('login.post') }}" method="POST" onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Procesando...';">
                 @csrf
                 <div class="form-group">
                     <label for="username">Usuario</label>

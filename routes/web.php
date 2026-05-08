@@ -62,6 +62,7 @@ Route::middleware(['simple_auth'])->group(function () {
     Route::get('/contratos', [ContratoController::class, 'index'])->name('contratos.index');
     Route::post('/contratos', [ContratoController::class, 'store'])->name('contratos.store');
     Route::put('/contratos/{id}', [ContratoController::class, 'update'])->name('contratos.update');
+    Route::patch('/contratos/{id}/toggle-activo', [ContratoController::class, 'toggleActivo'])->name('contratos.toggle_activo');
     Route::get('/contratos/{id}/detalle', [ContratoController::class, 'detalle'])->name('contratos.detalle');
     Route::get('/contratos/{id}/personal', [ContratoController::class, 'personalData'])->name('contratos.personal');
     Route::get('/contratos/{id}/personal-no-vinculado', [ContratoController::class, 'personalNVData'])->name('contratos.personal_nv');

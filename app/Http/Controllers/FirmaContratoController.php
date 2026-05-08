@@ -23,6 +23,9 @@ class FirmaContratoController extends Controller
     public function show($contrato_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         return view('contratos.firmar', compact('contrato'));
     }
 
@@ -31,6 +34,9 @@ class FirmaContratoController extends Controller
     public function validar(Request $request, $contrato_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
 
         $request->validate([
             'tipo_identificacion'  => 'required|string',
@@ -74,6 +80,9 @@ class FirmaContratoController extends Controller
     public function showRegistroNV(Request $request, $contrato_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         $tipo = $request->query('tipo');
         $numero = $request->query('numero');
 
@@ -83,6 +92,9 @@ class FirmaContratoController extends Controller
     public function processRegistroNV(Request $request, $contrato_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
 
         $request->validate([
             'nombre' => 'required|string',
@@ -152,6 +164,9 @@ class FirmaContratoController extends Controller
     public function showSign($contrato_id, $token)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         $person   = Personal::where('signature_token', $token)->firstOrFail();
 
         // Verificar si ya firmó este contrato específico
@@ -175,6 +190,9 @@ class FirmaContratoController extends Controller
     public function processSign(Request $request, $contrato_id, $token)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         $person   = Personal::where('signature_token', $token)->firstOrFail();
 
         $request->validate(['signature' => 'required']);
@@ -220,6 +238,9 @@ class FirmaContratoController extends Controller
     public function showSignNV($contrato_id, $nv_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         $person   = PersonalNoVinculado::findOrFail($nv_id);
 
         // Verificar si ya firmó este contrato específico
@@ -243,6 +264,9 @@ class FirmaContratoController extends Controller
     public function processSignNV(Request $request, $contrato_id, $nv_id)
     {
         $contrato = Contrato::findOrFail($contrato_id);
+        if (!$contrato->activo) {
+            abort(403, 'Este contrato ha sido inhabilitado y ya no acepta firmas.');
+        }
         $person   = PersonalNoVinculado::findOrFail($nv_id);
 
         $request->validate(['signature' => 'required']);

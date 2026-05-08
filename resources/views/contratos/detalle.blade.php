@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,86 +9,394 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         :root {
-            --primary:#f59e0b; --primary-hover:#d97706;
-            --bg-dark:#0f172a; --bg-card:#1e293b;
-            --text-main:#f8fafc; --text-muted:#94a3b8;
-            --success:#10b981; --danger:#ef4444;
-            --border:rgba(255,255,255,0.07); --input-bg:rgba(15,23,42,0.6);
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(255, 255, 255, 0.07);
+            --input-bg: rgba(15, 23, 42, 0.6);
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Outfit',sans-serif; background:radial-gradient(circle at top left,#1e293b,#0f172a); color:var(--text-main); min-height:100vh; }
 
-        nav { background:var(--bg-card); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); box-shadow:0 4px 6px -1px rgba(0,0,0,.15); position:sticky; top:0; z-index:100; }
-        .nav-logo h1 { font-size:1.25rem; font-weight:700; color:var(--primary); }
-        .nav-right { display:flex; align-items:center; gap:1.25rem; }
-        .nav-link { color:var(--text-muted); text-decoration:none; font-size:.875rem; font-weight:600; transition:color .2s; }
-        .nav-link:hover { color:var(--primary); }
-        .logout-btn { background:transparent; color:var(--text-main); border:1px solid rgba(255,255,255,.1); padding:.45rem 1rem; border-radius:.5rem; cursor:pointer; font-size:.875rem; font-family:'Outfit',sans-serif; transition:all .3s; text-decoration:none; }
-        .logout-btn:hover { background:rgba(239,68,68,.1); color:var(--danger); border-color:var(--danger); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        main { padding:2rem; max-width:1500px; margin:0 auto; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 600;
+            transition: color .2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, .1);
+            padding: .45rem 1rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all .3s;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, .1);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
         /* ── Contrato Header Card ── */
         .contrato-card {
-            background:var(--bg-card);
-            border:1px solid var(--border);
-            border-radius:1.25rem;
-            padding:1.75rem 2rem;
-            margin-bottom:2rem;
-            display:flex;
-            justify-content:space-between;
-            align-items:flex-start;
-            gap:1.5rem;
-            flex-wrap:wrap;
-            animation:fadeUp .4s ease-out;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.75rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            animation: fadeUp .4s ease-out;
         }
-        .contrato-card h2 { font-size:1.5rem; font-weight:700; margin-bottom:.5rem; }
-        .contrato-card .meta { display:flex; gap:1rem; flex-wrap:wrap; margin-top:.5rem; }
-        .meta-chip { background:rgba(99,102,241,.1); color:#a5b4fc; border:1px solid rgba(99,102,241,.2); padding:.25rem .75rem; border-radius:9999px; font-size:.8rem; font-weight:600; }
-        .back-btn { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:var(--text-muted); padding:.5rem 1.1rem; border-radius:.6rem; cursor:pointer; font-size:.875rem; font-family:'Outfit',sans-serif; transition:all .2s; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; }
-        .back-btn:hover { background:rgba(255,255,255,.1); color:var(--text-main); }
+
+        .contrato-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: .5rem;
+        }
+
+        .contrato-card .meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: .5rem;
+        }
+
+        .meta-chip {
+            background: rgba(99, 102, 241, .1);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, .2);
+            padding: .25rem .75rem;
+            border-radius: 9999px;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: var(--text-muted);
+            padding: .5rem 1.1rem;
+            border-radius: .6rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all .2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, .1);
+            color: var(--text-main);
+        }
 
         /* ── Tabs ── */
-        .tabs { display:flex; gap:1rem; margin-bottom:2rem; border-bottom:1px solid var(--border); padding-bottom:1rem; }
-        .tab-btn { background:transparent; border:none; color:var(--text-muted); font-size:1rem; font-weight:600; padding:.5rem 1rem; cursor:pointer; transition:all .3s; position:relative; font-family:'Outfit',sans-serif; }
-        .tab-btn:hover { color:var(--text-main); }
-        .tab-btn.active { color:var(--primary); }
-        .tab-btn.active::after { content:''; position:absolute; bottom:-1rem; left:0; width:100%; height:2px; background:var(--primary); border-radius:2px; }
-        .tab-pane { display:none; }
-        .tab-pane.active { display:block; animation:fadeUp .4s ease-out; }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
 
-        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: .5rem 1rem;
+            cursor: pointer;
+            transition: all .3s;
+            position: relative;
+            font-family: 'Outfit', sans-serif;
+        }
 
-        .table-container { background:var(--bg-card); border-radius:1.25rem; padding:1.5rem; border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,.2); overflow-x:auto; }
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeUp .4s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+            overflow-x: auto;
+        }
 
         /* DataTables */
-        .dataTables_wrapper { color:var(--text-main); }
-        table.dataTable { border-collapse:collapse !important; margin-top:1rem !important; }
-        table.dataTable thead th { background:rgba(15,23,42,.6); border-bottom:1px solid var(--border) !important; color:var(--text-muted); text-transform:uppercase; font-size:.7rem; letter-spacing:.05em; padding:1rem 1.25rem !important; }
-        table.dataTable tbody td { background:transparent !important; border-bottom:1px solid var(--border); padding:1rem 1.25rem !important; color:var(--text-main); vertical-align:middle; }
-        .dataTables_filter input,.dataTables_length select { background:var(--input-bg) !important; border:1px solid rgba(255,255,255,.1) !important; border-radius:.5rem !important; color:white !important; padding:.4rem .75rem !important; }
-        .dataTables_paginate .paginate_button { background:rgba(255,255,255,.05) !important; border:1px solid transparent !important; border-radius:.4rem !important; color:var(--text-main) !important; transition:all .2s; margin:0 2px; }
-        .dataTables_paginate .paginate_button.current { background:var(--primary) !important; color:#0f172a !important; }
-        .dataTables_paginate .paginate_button:hover:not(.current) { background:var(--primary-hover) !important; color:white !important; }
-        .dataTables_info { color:var(--text-muted) !important; padding-top:1rem !important; }
+        .dataTables_wrapper {
+            color: var(--text-main);
+        }
+
+        table.dataTable {
+            border-collapse: collapse !important;
+            margin-top: 1rem !important;
+        }
+
+        table.dataTable thead th {
+            background: rgba(15, 23, 42, .6);
+            border-bottom: 1px solid var(--border) !important;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: .7rem;
+            letter-spacing: .05em;
+            padding: 1rem 1.25rem !important;
+        }
+
+        table.dataTable tbody td {
+            background: transparent !important;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.25rem !important;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .dataTables_filter input,
+        .dataTables_length select {
+            background: var(--input-bg) !important;
+            border: 1px solid rgba(255, 255, 255, .1) !important;
+            border-radius: .5rem !important;
+            color: white !important;
+            padding: .4rem .75rem !important;
+        }
+
+        .dataTables_paginate .paginate_button {
+            background: rgba(255, 255, 255, .05) !important;
+            border: 1px solid transparent !important;
+            border-radius: .4rem !important;
+            color: var(--text-main) !important;
+            transition: all .2s;
+            margin: 0 2px;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: var(--primary) !important;
+            color: #0f172a !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover:not(.current) {
+            background: var(--primary-hover) !important;
+            color: white !important;
+        }
+
+        .dataTables_info {
+            color: var(--text-muted) !important;
+            padding-top: 1rem !important;
+        }
 
         /* Badges */
-        .badge-signed { display:inline-flex; align-items:center; gap:.3rem; background:rgba(16,185,129,.12); color:var(--success); border:1px solid rgba(16,185,129,.25); padding:.3rem .75rem; border-radius:9999px; font-size:.75rem; font-weight:700; }
-        .badge-pending { display:inline-flex; align-items:center; gap:.3rem; background:rgba(239,68,68,.1); color:var(--danger); border:1px solid rgba(239,68,68,.2); padding:.3rem .75rem; border-radius:9999px; font-size:.75rem; font-weight:700; }
-        .badge-status { display:inline-block; background:rgba(16,185,129,.1); color:var(--success); border:1px solid rgba(16,185,129,.2); padding:.25rem .75rem; border-radius:9999px; font-size:.75rem; font-weight:600; }
+        .badge-signed {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            background: rgba(16, 185, 129, .12);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, .25);
+            padding: .3rem .75rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 700;
+        }
 
-        .user-cell { display:flex; align-items:center; gap:.75rem; }
-        .avatar { width:38px; height:38px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; overflow:hidden; border:2px solid rgba(255,255,255,.1); flex-shrink:0; }
-        .avatar-placeholder { font-weight:700; color:#0f172a; font-size:.9rem; }
-        .bank-info { font-size:.75rem; line-height:1.4; }
-        .bank-name { font-weight:600; color:var(--primary); display:block; }
-        .account-number { color:var(--text-muted); font-family:monospace; }
-        .tag { display:inline-block; background:rgba(245,158,11,.1); color:var(--primary); padding:.1rem .5rem; border-radius:.25rem; font-size:.7rem; margin-right:.2rem; margin-bottom:.2rem; border:1px solid rgba(245,158,11,.2); }
+        .badge-pending {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            background: rgba(239, 68, 68, .1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, .2);
+            padding: .3rem .75rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 700;
+        }
 
-        .contract-link { display:block; font-size:.7rem; color:var(--primary); margin-top:.4rem; text-decoration:none; transition:opacity .2s; }
-        .contract-link:hover { opacity:.75; }
+        .badge-status {
+            display: inline-block;
+            background: rgba(16, 185, 129, .1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, .2);
+            padding: .25rem .75rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 600;
+        }
 
-        .ip-info { font-size:.7rem; color:var(--text-muted); margin-top:.25rem; font-family:monospace; }
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, .1);
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: .9rem;
+        }
+
+        .bank-info {
+            font-size: .75rem;
+            line-height: 1.4;
+        }
+
+        .bank-name {
+            font-weight: 600;
+            color: var(--primary);
+            display: block;
+        }
+
+        .account-number {
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(245, 158, 11, .1);
+            color: var(--primary);
+            padding: .1rem .5rem;
+            border-radius: .25rem;
+            font-size: .7rem;
+            margin-right: .2rem;
+            margin-bottom: .2rem;
+            border: 1px solid rgba(245, 158, 11, .2);
+        }
+
+        .contract-link {
+            display: block;
+            font-size: .7rem;
+            color: var(--primary);
+            margin-top: .4rem;
+            text-decoration: none;
+            transition: opacity .2s;
+        }
+
+        .contract-link:hover {
+            opacity: .75;
+        }
+
+        .ip-info {
+            font-size: .7rem;
+            color: var(--text-muted);
+            margin-top: .25rem;
+            font-family: monospace;
+        }
 
         /* ── Filters Section ── */
         .filters-container {
@@ -101,28 +410,48 @@
             border: 1px solid var(--border);
             animation: fadeUp .4s ease-out;
         }
-        .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .filter-group label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
-        .filter-group input { 
-            background: var(--input-bg); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 0.6rem; 
-            padding: 0.6rem 1rem; 
-            color: white; 
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-group input {
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.6rem;
+            padding: 0.6rem 1rem;
+            color: white;
             font-family: 'Outfit', sans-serif;
             outline: none;
             transition: border-color 0.2s;
         }
-        .filter-group input:focus { border-color: var(--primary); }
+
+        .filter-group input:focus {
+            border-color: var(--primary);
+        }
     </style>
 </head>
+
 <body>
     <nav>
-        <div class="nav-logo"><h1>ARMADILLO</h1></div>
+        <div class="nav-logo">
+            <h1>ARMADILLO</h1>
+        </div>
         <div class="nav-right">
             <a href="{{ route('dashboard') }}" class="nav-link">👥 Personal</a>
             <a href="{{ route('contratos.index') }}" class="nav-link">📋 Contratos</a>
-            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;"
+                onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='Saliendo...';">
                 @csrf
                 <button type="submit" class="logout-btn">Cerrar Sesión</button>
             </form>
@@ -135,8 +464,10 @@
             <div>
                 <h2>{{ $contrato->nombre }}</h2>
                 <div class="meta">
-                    <span class="meta-chip">📅 Inicio: {{ \Carbon\Carbon::parse($contrato->fecha_inicio)->format('d/m/Y') }}</span>
-                    <span class="meta-chip">📅 Fin: {{ \Carbon\Carbon::parse($contrato->fecha_fin)->format('d/m/Y') }}</span>
+                    <span class="meta-chip">📅 Inicio:
+                        {{ \Carbon\Carbon::parse($contrato->fecha_inicio)->format('d/m/Y') }}</span>
+                    <span class="meta-chip">📅 Fin:
+                        {{ \Carbon\Carbon::parse($contrato->fecha_fin)->format('d/m/Y') }}</span>
                 </div>
             </div>
             <a href="{{ route('contratos.index') }}" class="back-btn">← Volver a Contratos</a>
@@ -212,9 +543,9 @@
             $('#personalTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { 
+                ajax: {
                     url: "{{ route('contratos.personal', $contrato->id) }}",
-                    data: function(d) {
+                    data: function (d) {
                         d.nombre = $('#filter-nombre').val();
                         d.identificacion = $('#filter-identificacion').val();
                     }
@@ -283,9 +614,9 @@
             $('#personalNVTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: { 
+                ajax: {
                     url: "{{ route('contratos.personal_nv', $contrato->id) }}",
-                    data: function(d) {
+                    data: function (d) {
                         d.nombre = $('#filter-nombre').val();
                         d.identificacion = $('#filter-identificacion').val();
                     }
@@ -336,7 +667,7 @@
             });
 
             // Re-draw tables on filter input
-            $('#filter-nombre, #filter-identificacion').on('keyup change', function() {
+            $('#filter-nombre, #filter-identificacion').on('keyup change', function () {
                 $('#personalTable').DataTable().draw();
                 $('#personalNVTable').DataTable().draw();
             });
@@ -351,4 +682,5 @@
         }
     </script>
 </body>
+
 </html>

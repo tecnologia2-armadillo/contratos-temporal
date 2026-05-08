@@ -16,6 +16,7 @@ class Contrato extends Model
         'terminos',
         'fecha_inicio',
         'fecha_fin',
+        'activo',
         'drive_folder_id',
         'drive_personal_folder_id',
         'drive_nv_folder_id',
@@ -24,6 +25,7 @@ class Contrato extends Model
     protected $casts = [
         'fecha_inicio' => 'date',
         'fecha_fin'    => 'date',
+        'activo'       => 'boolean',
     ];
 
     /**
