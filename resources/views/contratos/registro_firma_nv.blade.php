@@ -293,15 +293,15 @@
                     </div>
                     <div class="form-group">
                         <label for="banco">Banco</label>
-                        <input type="text" id="banco" name="banco" required placeholder="Ej: Bancolombia, Nequi...">
-                    </div>
-                    <div class="form-group">
-                        <label for="tipo_cuenta">Tipo de Cuenta</label>
-                        <select id="tipo_cuenta" name="tipo_cuenta" required>
-                            <option value="Ahorros">Ahorros</option>
-                            <option value="Corriente">Corriente</option>
+                        <select id="banco" name="banco" required>
+                            <option value="">Selecciona un banco...</option>
+                            <option value="Daviplata">Daviplata</option>
+                            <option value="Nequi">Nequi</option>
+                            <option value="Davivienda">Davivienda</option>
+                            <option value="Bancolombia">Bancolombia</option>
                         </select>
                     </div>
+                    <input type="hidden" id="tipo_cuenta" name="tipo_cuenta" value="Ahorros">
                     <div class="form-group">
                         <label for="numero_cuenta">Número de Cuenta</label>
                         <input type="text" id="numero_cuenta" name="numero_cuenta" required
