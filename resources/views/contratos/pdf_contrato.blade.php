@@ -79,8 +79,7 @@
 <body>
     <div class="header">
         <h1>{{ $contrato->nombre }}</h1>
-        <p>ARMADILLO &ndash; Operaciones Temporales &nbsp;|&nbsp;
-        </p>
+        <p>OPERADORES ARMADILLO S.A.S.</p>
     </div>
 
     <div>

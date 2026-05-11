@@ -8,6 +8,7 @@ use App\Models\PersonalNoVinculado;
 use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class FirmaContratoController extends Controller
 {
@@ -137,7 +138,11 @@ class FirmaContratoController extends Controller
         // 3. Subir a Drive
         $driveLink = null;
         try {
-            $fileName = "Contrato_{$contrato->id}_{$person->identificacion}_{$person->apellido}.pdf";
+            $datePrefix = now()->format('ymd');
+            $nombre   = Str::slug($person->nombre);
+            $apellido = Str::slug($person->apellido);
+            $fileName = "{$datePrefix}_{$person->identificacion}_{$nombre}.{$apellido}.pdf";
+
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_nv_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];
@@ -209,7 +214,11 @@ class FirmaContratoController extends Controller
 
         $driveLink = null;
         try {
-            $fileName    = "Contrato_{$contrato->id}_{$person->per_num_doc}_{$person->per_primer_apellido}.pdf";
+            $datePrefix = now()->format('ymd');
+            $nombre   = Str::slug($person->per_primer_nombre);
+            $apellido = Str::slug($person->per_primer_apellido);
+            $fileName = "{$datePrefix}_{$person->per_num_doc}_{$nombre}.{$apellido}.pdf";
+
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_personal_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];
@@ -283,7 +292,11 @@ class FirmaContratoController extends Controller
 
         $driveLink = null;
         try {
-            $fileName    = "Contrato_{$contrato->id}_{$person->identificacion}_{$person->apellido}.pdf";
+            $datePrefix = now()->format('ymd');
+            $nombre   = Str::slug($person->nombre);
+            $apellido = Str::slug($person->apellido);
+            $fileName = "{$datePrefix}_{$person->identificacion}_{$nombre}.{$apellido}.pdf";
+
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_nv_folder_id);
             if ($driveResult && isset($driveResult['link'])) {
                 $driveLink = $driveResult['link'];

@@ -79,13 +79,14 @@
 <body>
     <div class="header">
         <h1>Contrato de Prestación de Servicios</h1>
-        <p>ARMADILLO - Operaciones Temporales</p>
+        <p>ARMADILLO</p>
     </div>
 
     <div class="info-grid">
         <div class="info-item"><span class="info-label">Contratista:</span> {{ $person->nombre_completo }}</div>
         <div class="info-item"><span class="info-label">Identificación:</span> {{ $person->per_tipo_doc }}
-            {{ $person->per_num_doc }}</div>
+            {{ $person->per_num_doc }}
+        </div>
         <div class="info-item"><span class="info-label">Ciudad:</span> {{ $person->ciudad->ciu_nombre ?? 'N/A' }}</div>
     </div>
 

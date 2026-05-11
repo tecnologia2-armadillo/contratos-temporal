@@ -245,6 +245,66 @@
                 transform: rotate(360deg);
             }
         }
+        /* ── Copiar celular toggle ── */
+        .copy-phone-row {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .copy-phone-toggle {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .copy-phone-toggle input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(245, 158, 11, .5);
+            border-radius: .25rem;
+            background: var(--input-bg);
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: background .2s, border-color .2s;
+            padding: 0;
+        }
+
+        .copy-phone-toggle input[type="checkbox"]:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .copy-phone-toggle input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -52%);
+            font-size: .65rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .copy-phone-badge {
+            font-size: .68rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: .03em;
+            text-transform: none;
+            white-space: nowrap;
+        }
+
+        #numero_cuenta.synced {
+            color: var(--primary);
+            border-color: rgba(245, 158, 11, .4);
+        }
     </style>
 </head>
 
@@ -303,7 +363,13 @@
                     </div>
                     <input type="hidden" id="tipo_cuenta" name="tipo_cuenta" value="Ahorros">
                     <div class="form-group">
-                        <label for="numero_cuenta">Número de Cuenta</label>
+                        <div class="copy-phone-row">
+                            <label for="numero_cuenta">Número de Cuenta</label>
+                            <label class="copy-phone-toggle" title="Nequi / Daviplata: usar mismo número">
+                                <input type="checkbox" id="copiar-celular" checked>
+                                <span class="copy-phone-badge">📱 Usar nº celular (Nequi/Daviplata)</span>
+                            </label>
+                        </div>
                         <input type="text" id="numero_cuenta" name="numero_cuenta" required
                             placeholder="Número de cuenta">
                     </div>
@@ -415,6 +481,32 @@
         }
         setTimeout(checkScroll, 100);
         contractBox.addEventListener('scroll', checkScroll);
+
+        // ── Copiar celular → número de cuenta ──
+        const telefonoInput  = document.getElementById('telefono');
+        const numeroCuenta   = document.getElementById('numero_cuenta');
+        const copiarCheckbox = document.getElementById('copiar-celular');
+
+        function syncCuenta() {
+            if (copiarCheckbox.checked) {
+                numeroCuenta.value = telefonoInput.value;
+                numeroCuenta.classList.add('synced');
+                numeroCuenta.readOnly = true;
+            } else {
+                numeroCuenta.classList.remove('synced');
+                numeroCuenta.readOnly = false;
+                numeroCuenta.focus();
+            }
+        }
+
+        // Sincronizar al cargar (checkbox viene marcado por defecto)
+        syncCuenta();
+
+        // Sincronizar mientras el usuario escribe el teléfono
+        telefonoInput.addEventListener('input', syncCuenta);
+
+        // Activar / desactivar la sincronización
+        copiarCheckbox.addEventListener('change', syncCuenta);
     </script>
 </body>
 

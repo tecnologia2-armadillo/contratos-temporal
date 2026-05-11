@@ -41,6 +41,45 @@
 
         .footer { text-align:center; color:var(--text-muted); font-size:.8rem; }
         @media(max-width:600px) { .card { padding:1.5rem; } }
+
+        /* ── Bienvenida con jerarquía visual ── */
+        .welcome-hero {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(245,158,11,.04));
+            border: 1px solid rgba(245,158,11,.25);
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-text {
+            display: flex;
+            flex-direction: column;
+            gap: .2rem;
+        }
+
+        .welcome-greeting {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .welcome-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .welcome-hint {
+            font-size: .78rem;
+            color: var(--text-muted);
+            margin-top: .1rem;
+        }
     </style>
 </head>
 <body>
@@ -48,7 +87,14 @@
         <div class="card">
             <div class="contrato-badge">📋 {{ $contrato->nombre }}</div>
             <h1>Firma tu Contrato</h1>
-            <p class="person-meta">Hola, <strong>{{ $person->nombre_completo }}</strong>. Lee el contrato completo y firma al final.</p>
+
+            <div class="welcome-hero">
+                <div class="welcome-text">
+                    <span class="welcome-greeting">Hola, te identificamos como</span>
+                    <span class="welcome-name">{{ $person->nombre_completo }}</span>
+                    <span class="welcome-hint">Lee el contrato completo y firma al final para continuar.</span>
+                </div>
+            </div>
 
             @if(session('error'))
                 <div class="error-alert"><span>⚠️</span><span>{{ session('error') }}</span></div>
