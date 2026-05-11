@@ -9,6 +9,7 @@ use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ContratoController extends Controller
 {
@@ -265,5 +266,84 @@ class ContratoController extends Controller
             'recordsFiltered' => $filteredRecords,
             'data'            => $personal,
         ]);
+    }
+
+    /**
+     * Exportar reporte de firmas a Excel (CSV).
+     */
+    public function exportExcel($id)
+    {
+        $contrato = Contrato::findOrFail($id);
+        
+        // 1. Personal Vinculado
+        $vinculados = Personal::with(['datoBancario.banco'])
+            ->leftJoin('contrato_personal as cp', function ($join) use ($id) {
+                $join->on('cp.personal_id', '=', 'personal.per_id')
+                     ->where('cp.contrato_id', '=', $id);
+            })
+            ->select('personal.*', 'cp.ip_firma', 'cp.created_at as fecha_firma_pivot')
+            ->get();
+
+        // 2. Personal No Vinculado
+        $noVinculados = PersonalNoVinculado::leftJoin('contrato_personal_no_vinculado as cpnv', function ($join) use ($id) {
+                $join->on('cpnv.personal_no_vinculado_id', '=', 'personal_no_vinculado.id')
+                     ->where('cpnv.contrato_id', '=', $id);
+            })
+            ->select('personal_no_vinculado.*', 'cpnv.ip_firma', 'cpnv.created_at as fecha_firma_pivot')
+            ->get();
+
+        $filename = "Reporte_Firmas_" . Str::slug($contrato->nombre) . "_" . now()->format('Ymd_His') . ".csv";
+        
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Tipo Personal', 'Nombre Completo', 'Tipo Doc', 'Identificacion', 'Telefono', 'Correo', 'Banco', 'Cuenta', 'Firmado', 'Fecha Firma', 'IP Firma'];
+
+        $callback = function() use($vinculados, $noVinculados, $columns) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF"); // BOM para compatibilidad con Excel UTF-8
+            fputcsv($file, $columns, ";");
+
+            foreach ($vinculados as $p) {
+                fputcsv($file, [
+                    'Vinculado',
+                    $p->nombre_completo,
+                    $p->per_tipo_doc,
+                    $p->per_num_doc,
+                    $p->per_telefono_whatsapp,
+                    $p->per_correo,
+                    $p->datoBancario?->banco?->ban_banco_nombre ?? 'N/A',
+                    $p->datoBancario?->dba_num_cuenta ?? 'N/A',
+                    $p->ip_firma ? 'SI' : 'NO',
+                    $p->fecha_firma_pivot ? \Carbon\Carbon::parse($p->fecha_firma_pivot)->format('d/m/Y H:i') : '',
+                    $p->ip_firma ?? ''
+                ], ";");
+            }
+
+            foreach ($noVinculados as $p) {
+                fputcsv($file, [
+                    'No Vinculado',
+                    $p->nombre . ' ' . $p->apellido,
+                    $p->tipo_identificacion,
+                    $p->identificacion,
+                    $p->telefono,
+                    $p->correo,
+                    $p->banco,
+                    $p->numero_cuenta,
+                    $p->ip_firma ? 'SI' : 'NO',
+                    $p->fecha_firma_pivot ? \Carbon\Carbon::parse($p->fecha_firma_pivot)->format('d/m/Y H:i') : '',
+                    $p->ip_firma ?? ''
+                ], ";");
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

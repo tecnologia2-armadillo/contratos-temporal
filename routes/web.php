@@ -66,6 +66,7 @@ Route::middleware(['simple_auth'])->group(function () {
     Route::get('/contratos/{id}/detalle', [ContratoController::class, 'detalle'])->name('contratos.detalle');
     Route::get('/contratos/{id}/personal', [ContratoController::class, 'personalData'])->name('contratos.personal');
     Route::get('/contratos/{id}/personal-no-vinculado', [ContratoController::class, 'personalNVData'])->name('contratos.personal_nv');
+    Route::get('/contratos/{id}/export', [ContratoController::class, 'exportExcel'])->name('contratos.export');
 });
 
 

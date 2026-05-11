@@ -155,6 +155,29 @@
             color: var(--text-main);
         }
 
+        .btn-excel {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #0f172a !important;
+            border: none;
+            padding: .5rem 1.1rem;
+            border-radius: .6rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            transition: all .3s;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, .3);
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            text-decoration: none;
+        }
+
+        .btn-excel:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, .45);
+        }
+
         /* ── Tabs ── */
         .tabs {
             display: flex;
@@ -470,7 +493,10 @@
                         {{ \Carbon\Carbon::parse($contrato->fecha_fin)->format('d/m/Y') }}</span>
                 </div>
             </div>
-            <a href="{{ route('contratos.index') }}" class="back-btn">← Volver a Contratos</a>
+            <div style="display:flex; gap:0.75rem;">
+                <a href="{{ route('contratos.export', $contrato->id) }}" class="btn-excel">📊 Descargar Excel</a>
+                <a href="{{ route('contratos.index') }}" class="back-btn">← Volver a Contratos</a>
+            </div>
         </div>
 
         <!-- Filters -->
