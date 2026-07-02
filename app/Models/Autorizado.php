@@ -13,7 +13,7 @@ class Autorizado extends Model
     // primaryKey is default 'id'
     
     protected $fillable = [
-        'num_cedula',
+        'numero_cedula',
         'nombre',
     ];
 }

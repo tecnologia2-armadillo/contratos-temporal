@@ -9,10 +9,10 @@ class Ciudad extends Model
 {
     use HasFactory;
 
-    protected $table = 'ciudades';
-    protected $primaryKey = 'ciu_id';
+    protected $table = 'municipios';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'ciu_nombre',
+        'nombre',
     ];
 }

@@ -10,10 +10,10 @@ class StatusPersonal extends Model
     use HasFactory;
 
     protected $table = 'status_personal';
-    protected $primaryKey = 'spe_id';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'spe_status_personal',
-        'spe_detalle_status',
+        'nombre',
+        'descripcion',
     ];
 }

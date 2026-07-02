@@ -19,20 +19,20 @@ class PersonalController extends Controller
             if ($request->has('search') && $request->search['value']) {
                 $search = $request->search['value'];
                 $query->where(function($q) use ($search) {
-                    $q->where('per_primer_nombre', 'ilike', "%$search%")
-                      ->orWhere('per_primer_apellido', 'ilike', "%$search%")
-                      ->orWhere('per_num_doc', 'ilike', "%$search%")
-                      ->orWhere('per_telefono_whatsapp', 'ilike', "%$search%")
-                      ->orWhere('per_correo', 'ilike', "%$search%");
+                    $q->where('primer_nombre', 'ilike', "%$search%")
+                      ->orWhere('primer_apellido', 'ilike', "%$search%")
+                      ->orWhere('num_documento', 'ilike', "%$search%")
+                      ->orWhere('telefono_whatsapp', 'ilike', "%$search%")
+                      ->orWhere('correo', 'ilike', "%$search%");
                 });
             }
 
             // Filter by Birth Date Range
             if ($request->has('birth_start') && $request->birth_start) {
-                $query->where('per_fecha_nacimiento', '>=', $request->birth_start);
+                $query->where('fecha_nacimiento', '>=', $request->birth_start);
             }
             if ($request->has('birth_end') && $request->birth_end) {
-                $query->where('per_fecha_nacimiento', '<=', $request->birth_end);
+                $query->where('fecha_nacimiento', '<=', $request->birth_end);
             }
 
             $totalRecords = Personal::count();

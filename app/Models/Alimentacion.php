@@ -10,9 +10,9 @@ class Alimentacion extends Model
     use HasFactory;
 
     protected $table = 'alimentacion';
-    protected $primaryKey = 'ali_id';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'ali_tipo_alimentacion',
+        'nombre',
     ];
 }

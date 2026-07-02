@@ -170,22 +170,31 @@ class ContratoController extends Controller
         if ($request->has('search') && $request->search['value']) {
             $search = $request->search['value'];
             $query->where(function ($q) use ($search) {
-                $q->where('per_primer_nombre', 'ilike', "%{$search}%")
-                  ->orWhere('per_primer_apellido', 'ilike', "%{$search}%")
-                  ->orWhere('per_num_doc', 'ilike', "%{$search}%")
-                  ->orWhere('per_telefono_whatsapp', 'ilike', "%{$search}%")
-                  ->orWhere('per_correo', 'ilike', "%{$search}%");
+                $q->where('primer_nombre', 'ilike', "%{$search}%")
+                  ->orWhere('primer_apellido', 'ilike', "%{$search}%")
+                  ->orWhere('num_documento', 'ilike', "%{$search}%")
+                  ->orWhere('telefono_whatsapp', 'ilike', "%{$search}%")
+                  ->orWhere('correo', 'ilike', "%{$search}%");
             });
         }
 
         // Filtros específicos
         if ($request->filled('nombre')) {
             $nombre = $request->nombre;
-            $query->where(DB::raw("CONCAT(per_primer_nombre, ' ', per_segundo_nombre, ' ', per_primer_apellido, ' ', per_segundo_apellido)"), 'ilike', "%{$nombre}%");
+            $query->where(DB::raw("CONCAT(primer_nombre, ' ', segundo_nombre, ' ', primer_apellido, ' ', segundo_apellido)"), 'ilike', "%{$nombre}%");
         }
 
         if ($request->filled('identificacion')) {
-            $query->where('per_num_doc', 'ilike', "%{$request->identificacion}%");
+            $query->where('num_documento', 'ilike', "%{$request->identificacion}%");
+        }
+
+        if ($request->filled('firmado')) {
+            $firmado = $request->firmado;
+            if ($firmado === 'si') {
+                $query->whereNotNull('cp.ip_firma');
+            } elseif ($firmado === 'no') {
+                $query->whereNull('cp.ip_firma');
+            }
         }
 
         $totalRecords    = Personal::count();
@@ -244,6 +253,15 @@ class ContratoController extends Controller
 
         if ($request->filled('identificacion')) {
             $query->where('identificacion', 'ilike', "%{$request->identificacion}%");
+        }
+
+        if ($request->filled('firmado')) {
+            $firmado = $request->firmado;
+            if ($firmado === 'si') {
+                $query->whereNotNull('cpnv.ip_firma');
+            } elseif ($firmado === 'no') {
+                $query->whereNull('cpnv.ip_firma');
+            }
         }
 
         $totalRecords    = PersonalNoVinculado::count();
@@ -313,12 +331,12 @@ class ContratoController extends Controller
                 fputcsv($file, [
                     'Vinculado',
                     $p->nombre_completo,
-                    $p->per_tipo_doc,
-                    $p->per_num_doc,
-                    $p->per_telefono_whatsapp,
-                    $p->per_correo,
-                    $p->datoBancario?->banco?->ban_banco_nombre ?? 'N/A',
-                    $p->datoBancario?->dba_num_cuenta ?? 'N/A',
+                    $p->tipo_documento,
+                    $p->num_documento,
+                    $p->telefono_whatsapp,
+                    $p->correo,
+                    $p->datoBancario?->banco?->nombre ?? 'N/A',
+                    $p->datoBancario?->numero_cuenta ?? 'N/A',
                     $p->ip_firma ? 'SI' : 'NO',
                     $p->fecha_firma_pivot ? \Carbon\Carbon::parse($p->fecha_firma_pivot)->format('d/m/Y H:i') : '',
                     $p->ip_firma ?? ''

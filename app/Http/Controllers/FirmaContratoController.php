@@ -51,8 +51,8 @@ class FirmaContratoController extends Controller
         $numero = trim($request->numero_identificacion);
 
         // Buscar en personal vinculado
-        $personal = Personal::where('per_tipo_doc', $tipo)
-                            ->where('per_num_doc', $numero)
+        $personal = Personal::where('tipo_documento', $tipo)
+                            ->where('num_documento', $numero)
                             ->first();
 
         if ($personal) {
@@ -205,19 +205,19 @@ class FirmaContratoController extends Controller
         $pdf = Pdf::loadView('contratos.pdf_contrato', [
             'contrato'  => $contrato,
             'nombre'    => $person->nombre_completo,
-            'tipo_doc'  => $person->per_tipo_doc,
-            'num_doc'   => $person->per_num_doc,
+            'tipo_doc'  => $person->tipo_documento,
+            'num_doc'   => $person->num_documento,
             'signature' => $request->input('signature'),
             'date'      => now()->format('d/m/Y H:i'),
-            'ip'        => $request->ip(),
+            'ip'   => $request->ip(),
         ]);
 
         $driveLink = null;
         try {
             $datePrefix = now()->format('ymd');
-            $nombre   = Str::slug($person->per_primer_nombre);
-            $apellido = Str::slug($person->per_primer_apellido);
-            $fileName = "{$datePrefix}_{$person->per_num_doc}_{$nombre}.{$apellido}.pdf";
+            $nombre   = Str::slug($person->primer_nombre);
+            $apellido = Str::slug($person->primer_apellido);
+            $fileName = "{$datePrefix}_{$person->num_documento}_{$nombre}.{$apellido}.pdf";
 
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName, $contrato->drive_personal_folder_id);
             if ($driveResult && isset($driveResult['link'])) {

@@ -10,9 +10,9 @@ class Banco extends Model
     use HasFactory;
 
     protected $table = 'bancos';
-    protected $primaryKey = 'ban_id';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'ban_banco_nombre',
+        'nombre',
     ];
 }

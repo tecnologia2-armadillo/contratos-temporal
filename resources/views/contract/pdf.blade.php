@@ -84,10 +84,10 @@
 
     <div class="info-grid">
         <div class="info-item"><span class="info-label">Contratista:</span> {{ $person->nombre_completo }}</div>
-        <div class="info-item"><span class="info-label">Identificación:</span> {{ $person->per_tipo_doc }}
-            {{ $person->per_num_doc }}
+        <div class="info-item"><span class="info-label">Identificación:</span> {{ $person->tipo_documento }}
+            {{ $person->num_documento }}
         </div>
-        <div class="info-item"><span class="info-label">Ciudad:</span> {{ $person->ciudad->ciu_nombre ?? 'N/A' }}</div>
+        <div class="info-item"><span class="info-label">Ciudad:</span> {{ $person->ciudad->nombre ?? 'N/A' }}</div>
     </div>
 
     <div class="section">
@@ -163,7 +163,7 @@
             <img src="{{ $signature }}" class="signature-img">
         </div>
         <p><strong>{{ $person->nombre_completo }}</strong><br>
-            CC. {{ $person->per_num_doc }}<br>
+            {{ $person->tipo_documento }}. {{ $person->num_documento }}<br>
             <span style="font-size: 8pt; color: #555;">Firmado el {{ $date }} desde la IP {{ $ip }}</span>
         </p>
     </div>

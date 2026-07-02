@@ -9,16 +9,18 @@ class DatoBancario extends Model
 {
     use HasFactory;
 
-    protected $table = 'datos_bancarios';
-    protected $primaryKey = 'dba_id';
+    protected $table = 'cuentas_bancarias';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'dba_num_cuenta',
-        'dba_banco_id',
+        'numero_cuenta',
+        'tipo_cuenta',
+        'banco_id',
+        'personal_id',
     ];
 
     public function banco()
     {
-        return $this->belongsTo(Banco::class, 'dba_banco_id', 'ban_id');
+        return $this->belongsTo(Banco::class, 'banco_id', 'id');
     }
 }

@@ -448,7 +448,8 @@
             letter-spacing: 0.05em;
         }
 
-        .filter-group input {
+        .filter-group input,
+        .filter-group select {
             background: var(--input-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.6rem;
@@ -459,7 +460,13 @@
             transition: border-color 0.2s;
         }
 
-        .filter-group input:focus {
+        .filter-group select option {
+            background: var(--bg-card);
+            color: white;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
             border-color: var(--primary);
         }
     </style>
@@ -508,6 +515,14 @@
             <div class="filter-group">
                 <label for="filter-identificacion">Número de Identificación</label>
                 <input type="text" id="filter-identificacion" placeholder="Ej: 12345678...">
+            </div>
+            <div class="filter-group">
+                <label for="filter-firmado">Estado de Firma</label>
+                <select id="filter-firmado">
+                    <option value="">Todos</option>
+                    <option value="si">Firmados</option>
+                    <option value="no">Pendientes / No Firmados</option>
+                </select>
             </div>
         </div>
 
@@ -574,16 +589,17 @@
                     data: function (d) {
                         d.nombre = $('#filter-nombre').val();
                         d.identificacion = $('#filter-identificacion').val();
+                        d.firmado = $('#filter-firmado').val();
                     }
                 },
                 columns: [
                     {
                         data: 'nombre_completo',
                         render: function (data, type, row) {
-                            const perfiles = (row.perfiles || []).map(p => `<span class="tag">${p.perf_nombre_perfil}</span>`).join('');
-                            const avatar = row.per_foto
-                                ? `<img src="${row.per_foto}" alt="${data}" style="width:100%;height:100%;object-fit:cover;">`
-                                : `<div class="avatar-placeholder">${row.per_primer_nombre.charAt(0)}${row.per_primer_apellido.charAt(0)}</div>`;
+                            const perfiles = (row.perfiles || []).map(p => `<span class="tag">${p.nombre}</span>`).join('');
+                            const avatar = row.foto
+                                ? `<img src="${row.foto}" alt="${data}" style="width:100%;height:100%;object-fit:cover;">`
+                                : `<div class="avatar-placeholder">${row.primer_nombre.charAt(0)}${row.primer_apellido.charAt(0)}</div>`;
                             return `<div class="user-cell">
                                 <div class="avatar">${avatar}</div>
                                 <div>
@@ -594,26 +610,26 @@
                         }
                     },
                     {
-                        data: 'per_num_doc',
+                        data: 'num_documento',
                         render: (data, type, row) =>
-                            `<div style="font-size:.8rem;color:var(--text-muted);">${row.per_tipo_doc}</div><div style="font-weight:600;">${data}</div>`
+                            `<div style="font-size:.8rem;color:var(--text-muted);">${row.tipo_documento}</div><div style="font-weight:600;">${data}</div>`
                     },
                     {
-                        data: 'per_correo',
+                        data: 'correo',
                         render: (data, type, row) =>
-                            `<div style="font-size:.85rem;">${data}</div><div style="color:var(--text-muted);">${row.per_telefono_whatsapp}</div>`
+                            `<div style="font-size:.85rem;">${data}</div><div style="color:var(--text-muted);">${row.telefono_whatsapp}</div>`
                     },
-                    { data: 'per_fecha_nacimiento' },
+                    { data: 'fecha_nacimiento' },
                     {
                         data: 'dato_bancario',
                         render: function (data) {
-                            if (data) return `<div class="bank-info"><span class="bank-name">${data.banco ? data.banco.ban_banco_nombre : 'Sin Banco'}</span><span class="account-number">${data.dba_num_cuenta}</span></div>`;
+                            if (data) return `<div class="bank-info"><span class="bank-name">${data.banco ? data.banco.nombre : 'Sin Banco'}</span><span class="account-number">${data.numero_cuenta}</span></div>`;
                             return `<span style="color:var(--text-muted);">Sin datos</span>`;
                         }
                     },
-                    { data: 'ciudad.ciu_nombre', defaultContent: 'N/A' },
+                    { data: 'ciudad.nombre', defaultContent: 'N/A' },
                     {
-                        data: 'status.spe_status_personal', defaultContent: 'Activo',
+                        data: 'status.nombre', defaultContent: 'Activo',
                         render: d => `<span class="badge-status">${d}</span>`
                     },
                     {
@@ -645,6 +661,7 @@
                     data: function (d) {
                         d.nombre = $('#filter-nombre').val();
                         d.identificacion = $('#filter-identificacion').val();
+                        d.firmado = $('#filter-firmado').val();
                     }
                 },
                 columns: [
@@ -693,7 +710,7 @@
             });
 
             // Re-draw tables on filter input
-            $('#filter-nombre, #filter-identificacion').on('keyup change', function () {
+            $('#filter-nombre, #filter-identificacion, #filter-firmado').on('keyup change', function () {
                 $('#personalTable').DataTable().draw();
                 $('#personalNVTable').DataTable().draw();
             });

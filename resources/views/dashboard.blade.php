@@ -606,10 +606,10 @@
                     {
                         "data": "nombre_completo",
                         "render": function (data, type, row) {
-                            let perfiles = row.perfiles.map(p => p.perf_nombre_perfil).join(', ');
-                            let avatar = row.per_foto
-                                ? `<img src="${row.per_foto}" alt="${data}">`
-                                : `<div class="avatar-placeholder">${row.per_primer_nombre.charAt(0)}${row.per_primer_apellido.charAt(0)}</div>`;
+                            let perfiles = row.perfiles.map(p => p.nombre).join(', ');
+                            let avatar = row.foto
+                                ? `<img src="${row.foto}" alt="${data}">`
+                                : `<div class="avatar-placeholder">${row.primer_nombre.charAt(0)}${row.primer_apellido.charAt(0)}</div>`;
 
                             return `<div class="user-cell">
                                         <div class="avatar">${avatar}</div>
@@ -621,38 +621,38 @@
                         }
                     },
                     {
-                        "data": "per_num_doc",
+                        "data": "num_documento",
                         "render": function (data, type, row) {
-                            return `<div style="font-size: 0.85rem;">${row.per_tipo_doc}</div>
+                            return `<div style="font-size: 0.85rem;">${row.tipo_documento}</div>
                                     <div style="font-weight: 600;">${data}</div>`;
                         }
                     },
                     {
-                        "data": "per_correo",
+                        "data": "correo",
                         "render": function (data, type, row) {
                             return `<div style="font-size: 0.85rem;">${data}</div>
-                                    <div style="color: var(--text-muted);">${row.per_telefono_whatsapp}</div>`;
+                                    <div style="color: var(--text-muted);">${row.telefono_whatsapp}</div>`;
                         }
                     },
-                    { "data": "per_fecha_nacimiento" },
+                    { "data": "fecha_nacimiento" },
                     {
                         "data": "id",
                         "render": function (data, type, row) {
                             if (row.dato_bancario) {
                                 return `<div class="bank-info">
-                                            <span class="bank-name">${row.dato_bancario.banco ? row.dato_bancario.banco.ban_banco_nombre : 'Sin Banco'}</span>
-                                            <span class="account-number">${row.dato_bancario.dba_num_cuenta}</span>
+                                            <span class="bank-name">${row.dato_bancario.banco ? row.dato_bancario.banco.nombre : 'Sin Banco'}</span>
+                                            <span class="account-number">${row.dato_bancario.numero_cuenta}</span>
                                         </div>`;
                             }
                             return `<span style="color: var(--text-muted);">Sin datos</span>`;
                         }
                     },
                     {
-                        "data": "ciudad.ciu_nombre",
+                        "data": "ciudad.nombre",
                         "defaultContent": "N/A"
                     },
                     {
-                        "data": "status.spe_status_personal",
+                        "data": "status.nombre",
                         "defaultContent": "Activo",
                         "render": function (data) {
                             return `<span class="status-badge">${data}</span>`;

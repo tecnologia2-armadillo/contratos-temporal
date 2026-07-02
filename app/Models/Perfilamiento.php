@@ -10,14 +10,14 @@ class Perfilamiento extends Model
     use HasFactory;
 
     protected $table = 'perfilamiento';
-    protected $primaryKey = 'perf_id';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
-        'perf_nombre_perfil',
+        'nombre',
     ];
 
     public function personal()
     {
-        return $this->belongsToMany(Personal::class, 'personal_perfilamiento', 'perf_id', 'id');
+        return $this->belongsToMany(Personal::class, 'personal_perfilamiento', 'perfilamiento_id', 'personal_id');
     }
 }

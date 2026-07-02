@@ -48,7 +48,7 @@ class ContractController extends Controller
 
         // Upload to Google Drive
         try {
-            $fileName = "Contrato_{$person->per_num_doc}_{$person->per_primer_apellido}.pdf";
+            $fileName = "Contrato_{$person->num_documento}_{$person->primer_apellido}.pdf";
             $driveResult = $this->driveService->uploadFile($pdf->output(), $fileName);
 
             if ($driveResult && isset($driveResult['link'])) {
