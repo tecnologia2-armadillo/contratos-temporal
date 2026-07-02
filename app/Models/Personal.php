@@ -11,7 +11,7 @@ class Personal extends Model
     use HasFactory;
 
     protected $table = 'personal';
-    protected $primaryKey = 'per_id';
+    protected $primaryKey = 'id';
     
     protected $fillable = [
         'per_pdf_cedula',
@@ -123,7 +123,7 @@ class Personal extends Model
 
     public function perfiles()
     {
-        return $this->belongsToMany(Perfilamiento::class, 'personal_perfilamiento', 'per_id', 'perf_id');
+        return $this->belongsToMany(Perfilamiento::class, 'personal_perfilamiento', 'id', 'perf_id');
     }
 
     public function contratos()
@@ -133,7 +133,7 @@ class Personal extends Model
             'contrato_personal',
             'personal_id',
             'contrato_id',
-            'per_id',
+            'id',
             'id'
         )->withPivot('ip_firma', 'contrato_src')->withTimestamps();
     }

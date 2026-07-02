@@ -158,7 +158,7 @@ class ContratoController extends Controller
     {
         $query = Personal::with(['genero', 'ciudad', 'status', 'perfiles', 'datoBancario.banco'])
             ->leftJoin('contrato_personal as cp', function ($join) use ($id) {
-                $join->on('cp.personal_id', '=', 'personal.per_id')
+                $join->on('cp.personal_id', '=', 'personal.id')
                      ->where('cp.contrato_id', '=', $id);
             })
             ->select(
@@ -278,7 +278,7 @@ class ContratoController extends Controller
         // 1. Personal Vinculado
         $vinculados = Personal::with(['datoBancario.banco'])
             ->leftJoin('contrato_personal as cp', function ($join) use ($id) {
-                $join->on('cp.personal_id', '=', 'personal.per_id')
+                $join->on('cp.personal_id', '=', 'personal.id')
                      ->where('cp.contrato_id', '=', $id);
             })
             ->select('personal.*', 'cp.ip_firma', 'cp.created_at as fecha_firma_pivot')

@@ -40,7 +40,7 @@ class Contrato extends Model
             'contrato_id',
             'personal_id',
             'id',
-            'per_id'
+            'id'
         )->withPivot('ip_firma', 'contrato_src')->withTimestamps();
     }
 

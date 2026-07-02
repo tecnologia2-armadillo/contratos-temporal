@@ -18,6 +18,6 @@ class Perfilamiento extends Model
 
     public function personal()
     {
-        return $this->belongsToMany(Personal::class, 'personal_perfilamiento', 'perf_id', 'per_id');
+        return $this->belongsToMany(Personal::class, 'personal_perfilamiento', 'perf_id', 'id');
     }
 }
